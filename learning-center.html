@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summit Learning Center — STEM Education for Grades 3–12</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #0d2d5e;
+      --blue:   #1a56a0;
+      --teal:   #0f8080;
+      --amber:  #f59e0b;
+      --green:  #16a34a;
+      --slate:  #475569;
+      --light:  #f1f5f9;
+      --white:  #ffffff;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,.10);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #1e293b;
+      background: var(--white);
+      line-height: 1.6;
+    }
+
+    /* ── Navigation ───────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--white); font-size: 1.25rem; font-weight: 700;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--amber); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,.85); text-decoration: none;
+      font-size: .95rem; font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--amber); }
+    .nav-cta {
+      background: var(--amber); color: var(--navy);
+      border: none; border-radius: 6px;
+      padding: 8px 20px; font-weight: 700; font-size: .9rem;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .88; }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      background: linear-gradient(135deg, var(--navy) 0%, #1a4080 55%, var(--teal) 100%);
+      color: var(--white);
+      padding: 96px 5% 88px;
+      overflow: hidden;
+      text-align: center;
+    }
+    /* decorative grid overlay */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(245,158,11,.18);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800; line-height: 1.15;
+      max-width: 800px; margin: 0 auto 20px;
+    }
+    .hero h1 span { color: var(--amber); }
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      max-width: 640px; margin: 0 auto 48px;
+      color: rgba(255,255,255,.82);
+    }
+
+    /* ── CTA Buttons ──────────────────────────────────────────── */
+    .cta-group {
+      display: flex; flex-wrap: wrap;
+      gap: 14px; justify-content: center;
+      position: relative; z-index: 1;
+    }
+
+    /* Variant 1 — Primary Fill */
+    .btn-primary {
+      background: var(--amber);
+      color: var(--navy);
+      border: none; border-radius: 8px;
+      padding: 14px 32px;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(245,158,11,.45);
+      transition: transform .18s, box-shadow .18s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(245,158,11,.55);
+    }
+
+    /* Variant 2 — Outlined White */
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,.75);
+      border-radius: 8px;
+      padding: 14px 32px;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer;
+      transition: background .18s, border-color .18s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,.12);
+      border-color: var(--white);
+    }
+
+    /* Variant 3 — Ghost Teal */
+    .btn-ghost {
+      background: rgba(15,128,128,.25);
+      color: #7dfff8;
+      border: 1.5px solid rgba(15,200,200,.5);
+      border-radius: 8px;
+      padding: 14px 32px;
+      font-size: 1rem; font-weight: 600;
+      cursor: pointer;
+      transition: background .18s, border-color .18s;
+      text-decoration: none; display: inline-block;
+    }
+    .btn-ghost:hover {
+      background: rgba(15,128,128,.45);
+      border-color: #7dfff8;
+    }
+
+    /* ── Hero Stats Strip ─────────────────────────────────────── */
+    .hero-stats {
+      display: flex; flex-wrap: wrap;
+      gap: 40px; justify-content: center;
+      padding: 32px 5% 0;
+      border-top: 1px solid rgba(255,255,255,.12);
+      margin-top: 64px;
+      position: relative; z-index: 1;
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--amber); }
+    .stat-lbl { font-size: .8rem; color: rgba(255,255,255,.7); letter-spacing: .05em; text-transform: uppercase; }
+
+    /* ── Section Shared ───────────────────────────────────────── */
+    section { padding: 80px 5%; }
+    .section-tag {
+      font-size: .75rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800; color: var(--navy); margin-bottom: 12px;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--slate); max-width: 600px; margin-bottom: 48px;
+    }
+
+    /* ── Grade Level Cards ────────────────────────────────────── */
+    .grades-section { background: var(--light); }
+    .grade-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .grade-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow .22s, transform .22s;
+    }
+    .grade-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(0,0,0,.13); }
+
+    .grade-card-header {
+      padding: 24px 24px 20px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      user-select: none;
+    }
+    .grade-card-header-left { display: flex; align-items: center; gap: 16px; }
+
+    .grade-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+    }
+    .icon-elem  { background: #dbeafe; }
+    .icon-mid   { background: #d1fae5; }
+    .icon-high  { background: #ede9fe; }
+
+    .grade-label {
+      font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; margin-bottom: 2px;
+    }
+    .lbl-elem  { color: #2563eb; }
+    .lbl-mid   { color: #16a34a; }
+    .lbl-high  { color: #7c3aed; }
+
+    .grade-title { font-size: 1.1rem; font-weight: 700; color: var(--navy); }
+    .grade-range { font-size: .8rem; color: var(--slate); }
+
+    .chevron {
+      width: 20px; height: 20px; flex-shrink: 0;
+      border: 2px solid #cbd5e1; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .28s, border-color .2s;
+      color: var(--slate);
+    }
+    .grade-card.open .chevron {
+      transform: rotate(180deg);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .grade-divider { height: 1px; background: #e2e8f0; margin: 0 24px; }
+
+    .grade-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .38s cubic-bezier(.4,0,.2,1), padding .28s;
+      padding: 0 24px;
+    }
+    .grade-card.open .grade-body {
+      max-height: 600px;
+      padding: 20px 24px 24px;
+    }
+
+    .subject-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .subject-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--light); border-radius: 8px;
+      padding: 9px 12px; font-size: .85rem; font-weight: 500;
+      color: var(--navy);
+    }
+    .subject-pill svg { flex-shrink: 0; }
+
+    .grade-body p {
+      font-size: .9rem; color: var(--slate); margin-bottom: 16px;
+    }
+    .grade-enroll {
+      display: inline-block;
+      padding: 10px 24px; border-radius: 7px;
+      font-size: .9rem; font-weight: 700;
+      border: none; cursor: pointer;
+      text-decoration: none;
+      transition: opacity .18s;
+    }
+    .grade-enroll:hover { opacity: .82; }
+    .enroll-elem  { background: #2563eb; color: #fff; }
+    .enroll-mid   { background: #16a34a; color: #fff; }
+    .enroll-high  { background: #7c3aed; color: #fff; }
+
+    /* Grades row inside card */
+    .grade-tags {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px;
+    }
+    .grade-tag {
+      font-size: .75rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .tag-elem  { background: #dbeafe; color: #1d4ed8; }
+    .tag-mid   { background: #d1fae5; color: #166534; }
+    .tag-high  { background: #ede9fe; color: #6d28d9; }
+
+    /* ── STEM Spotlight ───────────────────────────────────────── */
+    .stem-section { background: var(--white); }
+    .stem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .stem-card {
+      border: 1.5px solid #e2e8f0; border-radius: var(--radius);
+      padding: 28px 22px; text-align: center;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .stem-card:hover { border-color: var(--blue); box-shadow: 0 6px 20px rgba(26,86,160,.1); }
+    .stem-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .stem-card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .stem-card p  { font-size: .85rem; color: var(--slate); }
+
+    /* ── CTA Banner ───────────────────────────────────────────── */
+    .cta-banner {
+      background: linear-gradient(120deg, var(--navy), #1a4080);
+      color: var(--white); text-align: center;
+      padding: 72px 5%;
+    }
+    .cta-banner h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 12px; }
+    .cta-banner p  { color: rgba(255,255,255,.78); font-size: 1rem; max-width: 520px; margin: 0 auto 36px; }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    footer {
+      background: #0a1f42;
+      color: rgba(255,255,255,.6);
+      text-align: center;
+      padding: 28px 5%;
+      font-size: .85rem;
+    }
+    footer strong { color: var(--amber); }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 0 4%; }
+      .nav-links { display: none; }
+      .hero { padding: 64px 5% 60px; }
+      .hero-stats { gap: 24px; }
+      section { padding: 56px 5%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     NAVIGATION
+══════════════════════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    Summit <span>Learning&nbsp;Center</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#grades">Grade Levels</a></li>
+    <li><a href="#stem">STEM Programs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Enroll Now</button>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     HERO SECTION
+══════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">STEM-Focused Academic Excellence</div>
+
+  <h1>
+    Build the Foundations for a<br />
+    <span>Lifetime of Scientific Discovery</span>
+  </h1>
+
+  <p>
+    Summit Learning Center provides rigorous, expert-led instruction in
+    Science, Technology, Engineering, and Mathematics for students in
+    Grades 3 through 12 — preparing each learner for the challenges of
+    tomorrow's world.
+  </p>
+
+  <!-- ── 3 CTA Button Variants ── -->
+  <div class="cta-group">
+
+    <!-- Variant 1: Primary Fill — highest urgency, enrollment action -->
+    <a href="#grades" class="btn-primary">
+      Enroll Your Student Today
+    </a>
+
+    <!-- Variant 2: Outlined — secondary browse action -->
+    <a href="#grades" class="btn-outline">
+      Explore Grade-Level Programs
+    </a>
+
+    <!-- Variant 3: Ghost Teal — soft consultation action -->
+    <a href="#contact" class="btn-ghost">
+      Schedule a Free Consultation
+    </a>
+
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">2,400+</div>
+      <div class="stat-lbl">Students Enrolled</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">97%</div>
+      <div class="stat-lbl">State Assessment Proficiency</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">10</div>
+      <div class="stat-lbl">Grade Levels Served</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">15+</div>
+      <div class="stat-lbl">Years of Excellence</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     GRADE LEVEL CATEGORIES (drill-down)
+══════════════════════════════════════════════════════════ -->
+<section class="grades-section" id="grades">
+  <p class="section-tag">Academic Programs</p>
+  <h2 class="section-title">Find the Right Program for Your Student</h2>
+  <p class="section-sub">
+    Each program is designed to align with state academic standards while
+    delivering an enriched STEM curriculum tailored to the developmental
+    stage of the learner.
+  </p>
+
+  <div class="grade-grid">
+
+    <!-- ── Elementary: Grades 3–5 ── -->
+    <div class="grade-card" id="card-elem">
+      <div class="grade-card-header" onclick="toggleCard('card-elem')">
+        <div class="grade-card-header-left">
+          <div class="grade-icon icon-elem">🔭</div>
+          <div>
+            <div class="grade-label lbl-elem">Elementary School</div>
+            <div class="grade-title">Foundations of Discovery</div>
+            <div class="grade-range">Grades 3 – 5</div>
+          </div>
+        </div>
+        <div class="chevron">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M1 3l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="grade-divider"></div>
+      <div class="grade-body">
+        <div class="grade-tags" style="margin-top:4px">
+          <span class="grade-tag tag-elem">Grade 3</span>
+          <span class="grade-tag tag-elem">Grade 4</span>
+          <span class="grade-tag tag-elem">Grade 5</span>
+        </div>
+        <p>
+          Young learners develop curiosity and critical thinking through
+          hands-on experiments, mathematical reasoning, and guided
+          technology exploration. Our educators cultivate a love of
+          learning within a structured, supportive environment.
+        </p>
+        <div class="subject-list">
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#2563eb" viewBox="0 0 20 20"><path d="M9 3a6 6 0 100 12A6 6 0 009 3zm0-2a8 8 0 110 16A8 8 0 019 1z"/></svg>
+            Life Science
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#2563eb" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9V9h2v4zm0-6H9V5h2v2z"/></svg>
+            Earth Science
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#2563eb" viewBox="0 0 20 20"><path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zM4 12h4v4H4v-4zm8 0h4v4h-4v-4z"/></svg>
+            Math Concepts
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#2563eb" viewBox="0 0 20 20"><path d="M10 2L2 7l8 5 8-5-8-5zm-8 7l8 5 8-5"/></svg>
+            Intro to Coding
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#2563eb" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11v4l3 2-1 1.5-4-2.5V7h2z"/></svg>
+            Engineering Design
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#2563eb" viewBox="0 0 20 20"><path d="M3 3h14v14H3V3zm2 2v10h10V5H5z"/></svg>
+            Critical Reading
+          </div>
+        </div>
+        <a href="#contact" class="grade-enroll enroll-elem">Enroll for Grades 3–5</a>
+      </div>
+    </div>
+
+    <!-- ── Middle School: Grades 6–8 ── -->
+    <div class="grade-card" id="card-mid">
+      <div class="grade-card-header" onclick="toggleCard('card-mid')">
+        <div class="grade-card-header-left">
+          <div class="grade-icon icon-mid">⚗️</div>
+          <div>
+            <div class="grade-label lbl-mid">Middle School</div>
+            <div class="grade-title">Applied STEM Thinking</div>
+            <div class="grade-range">Grades 6 – 8</div>
+          </div>
+        </div>
+        <div class="chevron">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M1 3l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="grade-divider"></div>
+      <div class="grade-body">
+        <div class="grade-tags" style="margin-top:4px">
+          <span class="grade-tag tag-mid">Grade 6</span>
+          <span class="grade-tag tag-mid">Grade 7</span>
+          <span class="grade-tag tag-mid">Grade 8</span>
+        </div>
+        <p>
+          Students transition from discovery to disciplined inquiry.
+          Programs in this tier challenge learners to analyze data,
+          construct arguments from evidence, and apply algebraic and
+          geometric reasoning to real-world problems.
+        </p>
+        <div class="subject-list">
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#16a34a" viewBox="0 0 20 20"><path d="M9 3a6 6 0 100 12A6 6 0 009 3zm0-2a8 8 0 110 16A8 8 0 019 1z"/></svg>
+            Physical Science
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#16a34a" viewBox="0 0 20 20"><path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zM4 12h4v4H4v-4zm8 0h4v4h-4v-4z"/></svg>
+            Pre-Algebra / Algebra I
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#16a34a" viewBox="0 0 20 20"><path d="M10 2L2 7l8 5 8-5-8-5zm-8 7l8 5 8-5"/></svg>
+            Python Programming
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#16a34a" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11v4l3 2-1 1.5-4-2.5V7h2z"/></svg>
+            Robotics
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#16a34a" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9V9h2v4zm0-6H9V5h2v2z"/></svg>
+            Earth & Space Science
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#16a34a" viewBox="0 0 20 20"><path d="M3 3h14v14H3V3zm2 2v10h10V5H5z"/></svg>
+            Research Methods
+          </div>
+        </div>
+        <a href="#contact" class="grade-enroll enroll-mid">Enroll for Grades 6–8</a>
+      </div>
+    </div>
+
+    <!-- ── High School: Grades 9–12 ── -->
+    <div class="grade-card" id="card-high">
+      <div class="grade-card-header" onclick="toggleCard('card-high')">
+        <div class="grade-card-header-left">
+          <div class="grade-icon icon-high">🧬</div>
+          <div>
+            <div class="grade-label lbl-high">High School</div>
+            <div class="grade-title">College-Ready STEM</div>
+            <div class="grade-range">Grades 9 – 12</div>
+          </div>
+        </div>
+        <div class="chevron">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M1 3l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="grade-divider"></div>
+      <div class="grade-body">
+        <div class="grade-tags" style="margin-top:4px">
+          <span class="grade-tag tag-high">Grade 9</span>
+          <span class="grade-tag tag-high">Grade 10</span>
+          <span class="grade-tag tag-high">Grade 11</span>
+          <span class="grade-tag tag-high">Grade 12</span>
+        </div>
+        <p>
+          Advanced coursework prepares students for higher education and
+          professional STEM pathways. Offerings include AP-aligned
+          courses, dual-enrollment preparation, independent research
+          projects, and college application support.
+        </p>
+        <div class="subject-list">
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M9 3a6 6 0 100 12A6 6 0 009 3zm0-2a8 8 0 110 16A8 8 0 019 1z"/></svg>
+            Biology / AP Bio
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9V9h2v4zm0-6H9V5h2v2z"/></svg>
+            Chemistry / AP Chem
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M4 4h4v4H4V4zm8 0h4v4h-4V4zM4 12h4v4H4v-4zm8 0h4v4h-4v-4z"/></svg>
+            Calculus / AP Calc
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M10 2L2 7l8 5 8-5-8-5zm-8 7l8 5 8-5"/></svg>
+            Computer Science
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11v4l3 2-1 1.5-4-2.5V7h2z"/></svg>
+            Physics / AP Physics
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M3 3h14v14H3V3zm2 2v10h10V5H5z"/></svg>
+            SAT / ACT Prep
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M9 3a6 6 0 100 12A6 6 0 009 3zm0-2a8 8 0 110 16A8 8 0 019 1z"/></svg>
+            Research Capstone
+          </div>
+          <div class="subject-pill">
+            <svg width="14" height="14" fill="#7c3aed" viewBox="0 0 20 20"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 11H9V9h2v4zm0-6H9V5h2v2z"/></svg>
+            Data Science
+          </div>
+        </div>
+        <a href="#contact" class="grade-enroll enroll-high">Enroll for Grades 9–12</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     STEM SPOTLIGHT
+══════════════════════════════════════════════════════════ -->
+<section class="stem-section" id="stem">
+  <p class="section-tag">Why Summit</p>
+  <h2 class="section-title">A Comprehensive STEM Framework</h2>
+  <p class="section-sub">
+    Our curriculum integrates four core disciplines to develop
+    well-rounded, analytically rigorous thinkers.
+  </p>
+  <div class="stem-grid">
+    <div class="stem-card">
+      <div class="stem-icon">🔬</div>
+      <h3>Science</h3>
+      <p>Inquiry-based labs and research projects from elementary observation through advanced laboratory technique.</p>
+    </div>
+    <div class="stem-card">
+      <div class="stem-icon">💻</div>
+      <h3>Technology</h3>
+      <p>Structured progression from block-based coding in Grade 3 to object-oriented programming and data science in Grade 12.</p>
+    </div>
+    <div class="stem-card">
+      <div class="stem-icon">⚙️</div>
+      <h3>Engineering</h3>
+      <p>Design-thinking challenges, robotics competitions, and capstone engineering projects that mirror real-world problem solving.</p>
+    </div>
+    <div class="stem-card">
+      <div class="stem-icon">📐</div>
+      <h3>Mathematics</h3>
+      <p>A coherent scope-and-sequence from mathematical foundations through AP Calculus, Statistics, and beyond.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     CTA BANNER
+══════════════════════════════════════════════════════════ -->
+<section class="cta-banner" id="contact">
+  <h2>Ready to Invest in Your Student's Future?</h2>
+  <p>
+    Speak with an academic advisor to find the program that best matches
+    your student's current level and long-term goals.
+  </p>
+  <div class="cta-group">
+    <a href="mailto:admissions@summitlearning.edu" class="btn-primary">Contact Admissions</a>
+    <a href="#grades" class="btn-outline">View All Programs</a>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════ -->
+<footer>
+  <p>&copy; 2026 <strong>Summit Learning Center</strong>. All rights reserved. &nbsp;|&nbsp; Grades 3–12 &nbsp;|&nbsp; STEM Academic Excellence</p>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT — drill-down accordion
+══════════════════════════════════════════════════════════ -->
+<script>
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    const isOpen = card.classList.contains('open');
+
+    // Close all cards
+    document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('open'));
+
+    // Open the clicked card if it wasn't already open
+    if (!isOpen) card.classList.add('open');
+  }
+
+  // Open Elementary by default on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('card-elem').classList.add('open');
+  });
+</script>
+
+</body>
+</html>
