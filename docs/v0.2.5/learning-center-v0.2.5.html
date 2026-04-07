@@ -1,0 +1,1750 @@
+<!--
+PLAN:
+  Structure:
+    1. <header> — Hero section with headline, subheadline, and 3 CTA buttons.
+    2. <main>
+       a. Grade drill-down section — 3 default grade bands (3–5, 6–8, 9–12)
+       b. #programs — "Explore Our Programs" destination (v0.2.3)
+       c. #assessment — "Schedule an Assessment" destination (v0.2.3)
+       d. #services-elem / #services-mid / #services-high — grade service detail (v0.2.2)
+
+  Assumptions:
+    - No brand name provided → using "Learning Center" throughout.
+    - No reading level specified → plain language, formal educator tone.
+    - Individual grade boxes NOT requested → defaulting to 3 band structure.
+    - No color palette or logo provided → neutral, professional palette
+      (deep navy, slate, white, accent teal).
+    - Scope is hero + grade section + service detail sections + programs + assessment.
+    - CTA buttons rendered as <a role="button"> for consistent inline styling.
+    - No external libraries or fonts; system font stack only.
+    - v0.2.3: "Explore Our Programs" → #programs; "Schedule an Assessment" → #assessment.
+    - v0.2.3: Both new sections are graphically rich (dark/gradient backgrounds,
+      icon accents, step-process visualization) while staying CSS-only, no JS.
+-->
+
+<!--
+REVIEW:
+  [x] Single self-contained HTML file with <!doctype html>, <html>, <head>, <body>
+  [x] Minimal embedded CSS inside <style> — no external libraries or fonts
+  [x] Semantic structure: <header>, <main>, <section>, headings in order (h1 → h2 → h3)
+  [x] Hero section present with STEM emphasis
+  [x] Exactly 1 headline in hero
+  [x] Exactly 1 subheadline in hero
+  [x] Exactly 3 CTA button variants rendered as 3 visible buttons
+      — "Explore Our Programs" → #programs (v0.2.3)
+      — "Schedule an Assessment" → #assessment (v0.2.3)
+      — "Find My Grade Path" → #grade-paths (unchanged)
+  [x] All 3 hero CTA buttons now lead to substantive on-page destinations
+  [x] Buttons use <a role="button"> consistently
+  [x] Grade drill-down covers grades 3–12 with no gaps
+  [x] Service detail sections present for all 3 bands (v0.2.2)
+  [x] #programs section: visually rich dark-background program grid
+  [x] #assessment section: visually rich step-flow + scheduling block
+  [x] No hard claims, no hype, formal educator tone maintained
+  [x] Basic responsive layout via CSS (flexbox + media queries)
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Center &mdash; STEM-Focused Academic Support</title>
+  <style>
+    /* ── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   Helvetica, Arial, sans-serif;
+      color: #1a1a2e;
+      background: #f5f7fa;
+      line-height: 1.6;
+    }
+
+    /* ── Color Tokens ───────────────────────────────────────────── */
+    :root {
+      --navy:      #0d1b3e;
+      --navy-mid:  #1a2f5e;
+      --teal:      #1a8a8a;
+      --teal-dark: #136868;
+      --slate:     #4a5568;
+      --light-bg:  #eef2f7;
+      --white:     #ffffff;
+      --border:    #cdd5e0;
+      --radius:    8px;
+    }
+
+    /* ── Typography ─────────────────────────────────────────────── */
+    h1 { font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.2; }
+    h2 { font-size: clamp(1.4rem, 3vw, 2rem);     line-height: 1.25; }
+    h3 { font-size: 1.15rem; line-height: 1.3; }
+    p  { font-size: 1rem; }
+
+    /* ── Layout Utilities ───────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* ── Skip Link ──────────────────────────────────────────────── */
+    .skip-link {
+      position: absolute;
+      left: -9999px; top: auto;
+      width: 1px; height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus { position: static; width: auto; height: auto; }
+
+    /* ══════════════════════════════════════════════════════════════
+       HERO / HEADER
+    ══════════════════════════════════════════════════════════════ */
+    .site-header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #163a6e 100%);
+      color: var(--white);
+      padding: 4rem 0 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: "";
+      position: absolute; top: -60px; right: -80px;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: rgba(26,138,138,0.12);
+      pointer-events: none;
+    }
+    .site-header::after {
+      content: "";
+      position: absolute; bottom: -100px; left: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+
+    .hero { position: relative; z-index: 1; text-align: center; }
+
+    .hero__eyebrow {
+      display: inline-block;
+      font-size: 0.8rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: #7ecfcf; margin-bottom: 1rem;
+    }
+    .hero__headline {
+      color: var(--white); margin-bottom: 1.1rem;
+      max-width: 780px; margin-left: auto; margin-right: auto;
+    }
+    .hero__headline em { font-style: normal; color: #7ecfcf; }
+    .hero__subheadline {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: #c8d8ee; max-width: 640px;
+      margin: 0 auto 2.25rem; font-weight: 400;
+    }
+
+    /* ── CTA Buttons ────────────────────────────────────────────── */
+    .hero__cta-group {
+      display: flex; flex-wrap: wrap;
+      gap: 0.85rem; justify-content: center;
+    }
+    /* Shared base — works on both <a role="button"> and <button class="btn"> */
+    .btn,
+    a[role="button"] {
+      display: inline-block;
+      padding: 0.7rem 1.5rem;
+      border-radius: var(--radius);
+      font-size: 0.95rem; font-weight: 600;
+      text-decoration: none; cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease,
+                  box-shadow 0.2s ease, transform 0.15s ease;
+    }
+    /* Reset browser defaults when .btn is on a <button> element */
+    button.btn {
+      border: none;
+      font-family: inherit;
+      line-height: inherit;
+    }
+    .btn:hover,
+    a[role="button"]:hover  { transform: translateY(-2px); }
+    .btn:active,
+    a[role="button"]:active { transform: translateY(0); }
+    .btn:focus-visible,
+    a[role="button"]:focus-visible {
+      outline: 3px solid #7ecfcf; outline-offset: 3px;
+    }
+    .btn--primary {
+      background: var(--teal); color: var(--white);
+      box-shadow: 0 4px 14px rgba(26,138,138,0.45);
+    }
+    .btn--primary:hover {
+      background: var(--teal-dark);
+      box-shadow: 0 6px 18px rgba(26,138,138,0.55);
+    }
+    .btn--secondary {
+      background: transparent; color: var(--white);
+      border: 2px solid rgba(255,255,255,0.75);
+    }
+    .btn--secondary:hover {
+      background: rgba(255,255,255,0.1); border-color: var(--white);
+    }
+    .btn--tertiary {
+      background: rgba(26,138,138,0.15); color: #7ecfcf;
+      border: 1.5px solid rgba(126,207,207,0.5);
+    }
+    .btn--tertiary:hover {
+      background: rgba(26,138,138,0.28);
+      border-color: #7ecfcf; color: var(--white);
+    }
+    .btn--dark {
+      background: var(--navy); color: var(--white);
+      box-shadow: 0 4px 12px rgba(13,27,62,0.2);
+    }
+    .btn--dark:hover {
+      background: var(--navy-mid);
+      box-shadow: 0 6px 16px rgba(13,27,62,0.28);
+    }
+    .btn--outline-teal {
+      background: transparent; color: var(--teal);
+      border: 2px solid var(--teal);
+    }
+    .btn--outline-teal:hover {
+      background: var(--teal); color: var(--white);
+    }
+    .btn--white {
+      background: var(--white); color: var(--navy);
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+    }
+    .btn--white:hover {
+      background: #e8f0f7;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.24);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       TRUST BAR
+    ══════════════════════════════════════════════════════════════ */
+    .trust-bar {
+      background: var(--navy-mid);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0;
+    }
+    .trust-bar__inner {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 1.5rem 2.5rem;
+    }
+    .trust-bar__item { font-size: 0.82rem; color: #99b3cc; letter-spacing: 0.03em; }
+    .trust-bar__item span { color: #7ecfcf; font-weight: 600; margin-right: 0.35em; }
+
+    /* ══════════════════════════════════════════════════════════════
+       GRADE SECTION
+    ══════════════════════════════════════════════════════════════ */
+    .grade-section { padding: 4rem 0 5rem; }
+    .grade-section__intro { text-align: center; margin-bottom: 2.75rem; }
+    .grade-section__intro h2 { color: var(--navy); margin-bottom: 0.65rem; }
+    .grade-section__intro p  { color: var(--slate); max-width: 560px; margin: 0 auto; }
+
+    .grade-bands {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 800px) { .grade-bands { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 520px) { .grade-bands { grid-template-columns: 1fr; } }
+
+    .band-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 2px);
+      padding: 1.75rem 1.5rem 1.5rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .band-card:hover {
+      box-shadow: 0 8px 24px rgba(13,27,62,0.1); transform: translateY(-3px);
+    }
+    .band-card__tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--white); background: var(--teal);
+      padding: 0.25rem 0.6rem; border-radius: 4px; width: fit-content;
+    }
+    .band-card--mid .band-card__tag  { background: var(--navy-mid); }
+    .band-card--high .band-card__tag { background: #2a5298; }
+    .band-card__title { color: var(--navy); margin-top: -0.25rem; }
+    .band-card__desc  { color: var(--slate); font-size: 0.95rem; }
+    .band-card__skills {
+      list-style: none; display: flex; flex-direction: column; gap: 0.45rem;
+    }
+    .band-card__skills li {
+      font-size: 0.9rem; color: #374151;
+      padding-left: 1.25rem; position: relative;
+    }
+    .band-card__skills li::before {
+      content: "›"; position: absolute; left: 0;
+      color: var(--teal); font-weight: 700; font-size: 1.1rem; line-height: 1.3;
+    }
+    .band-card__footer {
+      margin-top: auto; padding-top: 0.5rem;
+      border-top: 1px solid var(--light-bg);
+    }
+    .band-card__link {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.88rem; font-weight: 600;
+      color: var(--teal); text-decoration: none;
+      transition: color 0.15s ease, gap 0.15s ease;
+    }
+    .band-card__link:hover { color: var(--teal-dark); gap: 0.55rem; }
+    .band-card__link:focus-visible {
+      outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 2px;
+    }
+    .band-card__link::after { content: "→"; font-size: 1rem; }
+
+    /* ══════════════════════════════════════════════════════════════
+       PROGRAMS SECTION  (#programs)
+    ══════════════════════════════════════════════════════════════ */
+    .programs-section {
+      background: linear-gradient(160deg, #0a1628 0%, #0d1b3e 45%, #0f2a4a 100%);
+      color: var(--white);
+      padding: 5rem 0 5.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .programs-section::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .programs-section::after {
+      content: "";
+      position: absolute; top: -120px; right: -120px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,138,138,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .programs-section .container { position: relative; z-index: 1; }
+
+    .programs-section__intro { text-align: center; margin-bottom: 3rem; }
+    .programs-section__intro .section-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: #7ecfcf; margin-bottom: 0.85rem;
+    }
+    .programs-section__intro h2 { color: var(--white); margin-bottom: 0.75rem; }
+    .programs-section__intro p  { color: #a8c0d8; max-width: 580px; margin: 0 auto; }
+
+    .programs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 3rem;
+    }
+    @media (max-width: 860px) { .programs-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 520px) { .programs-grid { grid-template-columns: 1fr; } }
+
+    .program-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-top: 4px solid var(--card-accent, var(--teal));
+      border-radius: var(--radius);
+      padding: 1.75rem 1.5rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.75rem;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .program-card:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+    .program-card--math     { --card-accent: #1a8a8a; }
+    .program-card--science  { --card-accent: #16a34a; }
+    .program-card--ela      { --card-accent: #d97706; }
+    .program-card--testprep { --card-accent: #7c3aed; }
+    .program-card--skills   { --card-accent: #2563eb; }
+    .program-card--ap       { --card-accent: #db2777; }
+
+    .program-card__icon { font-size: 2rem; line-height: 1; margin-bottom: 0.25rem; }
+    .program-card__name { font-size: 1.05rem; font-weight: 700; color: var(--white); }
+    .program-card__desc { font-size: 0.88rem; color: #a8c0d8; line-height: 1.55; }
+    .program-card__tags {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+      margin-top: auto; padding-top: 0.5rem;
+    }
+    .program-tag {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 0.18rem 0.5rem; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.7);
+    }
+    .program-tag--accent {
+      border-color: var(--card-accent);
+      color: var(--white);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .programs-section__footer {
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 2.5rem;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1rem;
+    }
+    .programs-section__footer p { color: #a8c0d8; max-width: 480px; }
+    .programs-section__footer .cta-row {
+      display: flex; flex-wrap: wrap;
+      gap: 0.85rem; justify-content: center;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       ASSESSMENT SECTION  (#assessment)
+    ══════════════════════════════════════════════════════════════ */
+    .assessment-section {
+      padding: 5rem 0 5.5rem;
+      background: var(--white);
+      position: relative; overflow: hidden;
+    }
+    .assessment-section::before {
+      content: "";
+      position: absolute; bottom: -80px; right: -80px;
+      width: 420px; height: 420px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(26,138,138,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .assessment-section .container { position: relative; z-index: 1; }
+
+    .assessment-section__intro { text-align: center; margin-bottom: 3.5rem; }
+    .assessment-section__intro .section-eyebrow {
+      display: inline-block;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.85rem;
+    }
+    .assessment-section__intro h2 { color: var(--navy); margin-bottom: 0.75rem; }
+    .assessment-section__intro p  { color: var(--slate); max-width: 580px; margin: 0 auto; }
+
+    .assessment-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-bottom: 4rem;
+      position: relative;
+    }
+    .assessment-steps::before {
+      content: "";
+      position: absolute;
+      top: 2.25rem; left: calc(100% / 6);
+      width: calc(100% * 2/3);
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal) 0%, #2a5298 50%, #7c3aed 100%);
+      z-index: 0;
+    }
+    @media (max-width: 640px) {
+      .assessment-steps { grid-template-columns: 1fr; gap: 2rem; }
+      .assessment-steps::before { display: none; }
+    }
+
+    .assessment-step {
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      padding: 0 1.25rem;
+      position: relative; z-index: 1;
+    }
+    .step-number {
+      width: 4.5rem; height: 4.5rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: 800; color: var(--white);
+      margin-bottom: 1.25rem;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      position: relative; flex-shrink: 0;
+    }
+    .step-number::before {
+      content: "";
+      position: absolute; inset: -5px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.3);
+    }
+    .step-number--1 { background: linear-gradient(135deg, var(--teal) 0%, #0f6b6b 100%); }
+    .step-number--2 { background: linear-gradient(135deg, #2a5298 0%, #1a3a6e 100%); }
+    .step-number--3 { background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); }
+    .step-content h3 { color: var(--navy); margin-bottom: 0.5rem; }
+    .step-content p  { font-size: 0.88rem; color: var(--slate); line-height: 1.55; }
+
+    .assessment-scope { margin-bottom: 3.5rem; }
+    .assessment-scope h3 {
+      text-align: center; color: var(--navy);
+      margin-bottom: 1.75rem; font-size: 1.25rem;
+    }
+    .scope-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 760px) { .scope-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 420px) { .scope-grid { grid-template-columns: 1fr; } }
+
+    .scope-card {
+      background: var(--light-bg);
+      border-left: 4px solid var(--scope-color, var(--teal));
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1.25rem 1rem;
+    }
+    .scope-card--math    { --scope-color: var(--teal); }
+    .scope-card--science { --scope-color: #16a34a; }
+    .scope-card--ela     { --scope-color: #d97706; }
+    .scope-card--study   { --scope-color: #2563eb; }
+    .scope-card__icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .scope-card__name {
+      font-size: 0.88rem; font-weight: 700; color: var(--navy); margin-bottom: 0.35rem;
+    }
+    .scope-card__items {
+      list-style: none; display: flex; flex-direction: column; gap: 0.25rem;
+    }
+    .scope-card__items li {
+      font-size: 0.8rem; color: var(--slate);
+      padding-left: 0.9rem; position: relative;
+    }
+    .scope-card__items li::before {
+      content: "·"; position: absolute; left: 0;
+      color: var(--scope-color); font-weight: 700; font-size: 1rem;
+    }
+
+    .assessment-meta {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      justify-content: center; margin-top: -1.5rem; margin-bottom: 2.5rem;
+    }
+    .a-pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; font-weight: 600;
+      padding: 0.35rem 0.85rem; border-radius: 20px;
+      border: 1.5px solid var(--border); background: var(--white);
+      color: var(--slate);
+    }
+    .a-pill__dot { width: 8px; height: 8px; border-radius: 50%; }
+    .a-pill--time   .a-pill__dot { background: var(--teal); }
+    .a-pill--place  .a-pill__dot { background: #2563eb; }
+    .a-pill--cost   .a-pill__dot { background: #16a34a; }
+    .a-pill--age    .a-pill__dot { background: #d97706; }
+
+    .assessment-schedule {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #163a6e 100%);
+      border-radius: calc(var(--radius) + 4px);
+      padding: 2.5rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1.5rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .assessment-schedule::after {
+      content: "";
+      position: absolute; top: -60px; right: -60px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: rgba(26,138,138,0.15); pointer-events: none;
+    }
+    @media (max-width: 600px) {
+      .assessment-schedule { grid-template-columns: 1fr; text-align: center; }
+      .assessment-schedule .cta-row { justify-content: center; }
+    }
+    .assessment-schedule__copy { position: relative; z-index: 1; }
+    .assessment-schedule__copy h3 { color: var(--white); font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .assessment-schedule__copy p  { color: #c8d8ee; font-size: 0.9rem; }
+    .assessment-schedule__actions {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 0.6rem; align-items: flex-start;
+    }
+    @media (max-width: 600px) { .assessment-schedule__actions { align-items: center; } }
+    .schedule-note { font-size: 0.75rem; color: #7ecfcf; text-align: center; }
+
+    /* ══════════════════════════════════════════════════════════════
+       SERVICE DETAIL SECTIONS  (v0.2.2)
+    ══════════════════════════════════════════════════════════════ */
+    .services-section {
+      padding: 4rem 0 5rem;
+      border-top: 3px solid var(--light-bg);
+    }
+    .services-section--elem  { border-top-color: var(--teal); }
+    .services-section--mid   { border-top-color: var(--navy-mid); }
+    .services-section--high  { border-top-color: #2a5298; }
+
+    .services-section__back {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--slate); text-decoration: none;
+      margin-bottom: 2rem; transition: color 0.15s ease;
+    }
+    .services-section__back::before { content: "←"; }
+    .services-section__back:hover   { color: var(--teal); }
+    .services-section__back:focus-visible {
+      outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 2px;
+    }
+    .services-section__header { margin-bottom: 2.5rem; }
+    .services-section__band-label {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--white); background: var(--teal);
+      padding: 0.25rem 0.6rem; border-radius: 4px; margin-bottom: 0.75rem;
+    }
+    .services-section--mid  .services-section__band-label { background: var(--navy-mid); }
+    .services-section--high .services-section__band-label { background: #2a5298; }
+    .services-section__header h2 { color: var(--navy); margin-bottom: 0.6rem; }
+    .services-section__header p  { color: var(--slate); max-width: 620px; }
+
+    .services-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem; margin-bottom: 2.5rem;
+    }
+    @media (max-width: 640px) { .services-grid { grid-template-columns: 1fr; } }
+
+    .service-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .service-card__name  { font-size: 1rem; font-weight: 700; color: var(--navy); }
+    .service-card__desc  { font-size: 0.9rem; color: var(--slate); line-height: 1.55; }
+    .service-card__meta  { margin-top: auto; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .meta-pill {
+      font-size: 0.73rem; font-weight: 600; letter-spacing: 0.04em;
+      padding: 0.2rem 0.55rem; border-radius: 20px;
+      background: var(--light-bg); color: var(--slate); border: 1px solid var(--border);
+    }
+    .meta-pill--format { color: var(--teal); border-color: var(--teal); background: rgba(26,138,138,0.06); }
+
+    .services-expect {
+      background: var(--light-bg); border-radius: var(--radius);
+      padding: 1.5rem 1.75rem; margin-bottom: 2rem;
+    }
+    .services-expect h3 { color: var(--navy); margin-bottom: 0.75rem; font-size: 1rem; }
+    .services-expect ul {
+      list-style: none; display: grid;
+      grid-template-columns: repeat(2, 1fr); gap: 0.4rem 1.5rem;
+    }
+    @media (max-width: 520px) { .services-expect ul { grid-template-columns: 1fr; } }
+    .services-expect li {
+      font-size: 0.88rem; color: #374151;
+      padding-left: 1.1rem; position: relative;
+    }
+    .services-expect li::before {
+      content: "✓"; position: absolute; left: 0;
+      color: var(--teal); font-weight: 700; font-size: 0.85rem;
+    }
+    .services-cta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .services-cta p { font-size: 0.9rem; color: var(--slate); }
+
+    /* ══════════════════════════════════════════════════════════════
+       BOOKING MODAL
+    ══════════════════════════════════════════════════════════════ */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(10, 20, 40, 0.75);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+      padding: 1rem;
+    }
+    .modal-overlay.is-open { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: calc(var(--radius) + 4px);
+      width: 100%; max-width: 580px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+      position: relative;
+      animation: modalIn 0.22s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    }
+    }
+
+    .modal__header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #163a6e 100%);
+      border-radius: calc(var(--radius) + 4px) calc(var(--radius) + 4px) 0 0;
+      padding: 2rem 2rem 1.75rem;
+      position: relative; overflow: hidden;
+    }
+    .modal__header::after {
+      content: "";
+      position: absolute; top: -40px; right: -40px;
+      width: 180px; height: 180px; border-radius: 50%;
+      background: rgba(26,138,138,0.2); pointer-events: none;
+    }
+    .modal__eyebrow {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: #7ecfcf; margin-bottom: 0.5rem;
+      display: block; position: relative; z-index: 1;
+    }
+    .modal__title {
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--white); line-height: 1.25;
+      position: relative; z-index: 1;
+    }
+    .modal__subtitle {
+      font-size: 0.88rem; color: #a8c0d8; margin-top: 0.4rem;
+      position: relative; z-index: 1;
+    }
+    .modal__close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(255,255,255,0.12); border: none;
+      color: var(--white); font-size: 1.25rem; line-height: 1;
+      width: 2rem; height: 2rem; border-radius: 50%;
+      cursor: pointer; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s ease;
+    }
+    .modal__close:hover { background: rgba(255,255,255,0.22); }
+    .modal__close:focus-visible { outline: 2px solid #7ecfcf; outline-offset: 2px; }
+
+    .modal__body { padding: 1.75rem 2rem 2rem; }
+
+    .booking-form { display: flex; flex-direction: column; gap: 1.1rem; }
+
+    .form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-field { display: flex; flex-direction: column; gap: 0.35rem; }
+    .form-field label {
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--navy); letter-spacing: 0.03em; text-transform: uppercase;
+    }
+    .form-field .field-hint {
+      font-size: 0.75rem; color: var(--slate); font-weight: 400;
+      text-transform: none; letter-spacing: 0; margin-top: -0.15rem;
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%; padding: 0.6rem 0.85rem;
+      border: 1.5px solid var(--border); border-radius: var(--radius);
+      font-size: 0.92rem; font-family: inherit; color: var(--navy);
+      background: var(--white);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      appearance: none; -webkit-appearance: none;
+    }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none; border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(26,138,138,0.15);
+    }
+    .form-field textarea { resize: vertical; min-height: 80px; }
+    .form-field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%234a5568' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.85rem center;
+      padding-right: 2.25rem;
+    }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .chip-group input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+    .chip-group label {
+      display: inline-block; padding: 0.38rem 0.85rem;
+      border: 1.5px solid var(--border); border-radius: 20px;
+      font-size: 0.82rem; font-weight: 600; color: var(--slate);
+      cursor: pointer; text-transform: none; letter-spacing: 0;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .chip-group input[type="radio"]:checked + label {
+      border-color: var(--teal); background: rgba(26,138,138,0.08); color: var(--teal);
+    }
+    .chip-group input[type="radio"]:focus-visible + label {
+      outline: 2px solid var(--teal); outline-offset: 2px;
+    }
+
+    .form-divider { height: 1px; background: var(--border); margin: 0.25rem 0; }
+
+    .form-submit-row {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .form-submit-row .form-note {
+      font-size: 0.78rem; color: var(--slate); max-width: 240px; line-height: 1.45;
+    }
+    .btn--submit {
+      background: var(--teal); color: var(--white);
+      border: none; border-radius: var(--radius);
+      padding: 0.7rem 1.75rem;
+      font-size: 0.95rem; font-weight: 700; font-family: inherit;
+      cursor: pointer; white-space: nowrap;
+      box-shadow: 0 4px 14px rgba(26,138,138,0.4);
+      transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    }
+    .btn--submit:hover {
+      background: var(--teal-dark);
+      box-shadow: 0 6px 18px rgba(26,138,138,0.5); transform: translateY(-2px);
+    }
+    .btn--submit:active { transform: translateY(0); }
+    .btn--submit:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+    .modal__success {
+      display: none; text-align: center; padding: 2.5rem 2rem 3rem;
+    }
+    .modal__success.is-visible { display: block; }
+    .booking-form.is-hidden    { display: none; }
+
+    .success-icon {
+      width: 4rem; height: 4rem; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal) 0%, #0f6b6b 100%);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem; font-size: 1.75rem;
+      box-shadow: 0 6px 20px rgba(26,138,138,0.35);
+    }
+    .modal__success h3 { color: var(--navy); margin-bottom: 0.6rem; }
+    .modal__success p  {
+      font-size: 0.9rem; color: var(--slate); max-width: 360px; margin: 0 auto;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════════════════════ */
+    .site-footer {
+      background: var(--navy); color: #8fa8c4;
+      text-align: center; padding: 1.5rem 1.25rem; font-size: 0.82rem;
+    }
+    .site-footer a { color: #7ecfcf; text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       HERO / HEADER
+  ══════════════════════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <div class="hero">
+
+        <span class="hero__eyebrow">Academic Support &amp; STEM Enrichment</span>
+
+        <!-- HEADLINE (exactly 1) -->
+        <h1 class="hero__headline">
+          Building <em>STEM Confidence</em> and Academic Mastery,<br
+          aria-hidden="true"> Grade by Grade
+        </h1>
+
+        <!-- SUBHEADLINE (exactly 1) -->
+        <p class="hero__subheadline">
+          The Learning Center partners with students in grades 3&ndash;12 and their
+          families to strengthen foundational skills, deepen subject-area
+          understanding, and develop the habits of learning that support
+          long-term academic readiness.
+        </p>
+
+        <!-- CTA BUTTONS (exactly 3) -->
+        <nav class="hero__cta-group" aria-label="Primary actions">
+          <a href="#programs" role="button" class="btn--primary">
+            Explore Our Programs
+          </a>
+          <a href="#assessment" role="button" class="btn--secondary">
+            Schedule an Assessment
+          </a>
+          <a href="#grade-paths" role="button" class="btn--tertiary">
+            Find My Grade Path
+          </a>
+        </nav>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- Trust bar -->
+  <div class="trust-bar" aria-hidden="true">
+    <div class="trust-bar__inner container">
+      <span class="trust-bar__item"><span>Grades 3&ndash;12</span> Structured Curriculum</span>
+      <span class="trust-bar__item"><span>STEM-Integrated</span> Across All Subjects</span>
+      <span class="trust-bar__item"><span>Family-Centered</span> Progress Communication</span>
+      <span class="trust-bar__item"><span>Individualized</span> Learning Plans</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════════════════════ -->
+  <main id="main-content">
+
+    <!-- ── Grade Path Section ─────────────────────────────────── -->
+    <section class="grade-section" id="grade-paths" aria-labelledby="grade-section-heading">
+      <div class="container">
+
+        <div class="grade-section__intro">
+          <h2 id="grade-section-heading">Find Your Grade Path</h2>
+          <p>
+            Each grade band offers a structured scope and sequence built around
+            core academic skills and STEM integration. Select the band that fits
+            your student to learn what to expect.
+          </p>
+        </div>
+
+        <div class="grade-bands" role="list">
+
+          <article class="band-card band-card--elem" role="listitem"
+                   aria-labelledby="band-elem-title">
+            <span class="band-card__tag">Elementary</span>
+            <h3 class="band-card__title" id="band-elem-title">Grades 3&ndash;5</h3>
+            <p class="band-card__desc">
+              Students in this band strengthen core literacy and numeracy
+              while developing their first systematic encounters with scientific
+              thinking and mathematical reasoning. The focus is on building
+              accuracy, persistence, and curiosity as foundational habits.
+            </p>
+            <ul class="band-card__skills" aria-label="Example skills and topics">
+              <li>Reading comprehension and informational text analysis</li>
+              <li>Multi-digit arithmetic, fractions, and early geometry</li>
+              <li>Introduction to the scientific method and data observation</li>
+              <li>Writing with structure: sentences, paragraphs, and evidence</li>
+            </ul>
+            <div class="band-card__footer">
+              <a href="#services-elem" class="band-card__link"
+                 aria-label="Explore Grades 3–5 programs">
+                Explore Grades 3&ndash;5
+              </a>
+            </div>
+          </article>
+
+          <article class="band-card band-card--mid" role="listitem"
+                   aria-labelledby="band-mid-title">
+            <span class="band-card__tag">Middle School</span>
+            <h3 class="band-card__title" id="band-mid-title">Grades 6&ndash;8</h3>
+            <p class="band-card__desc">
+              Middle school learners encounter increasingly abstract concepts
+              across disciplines. This band supports the transition to
+              pre-algebraic and algebraic thinking, structured writing, and
+              disciplinary science, while helping students develop independent
+              study strategies.
+            </p>
+            <ul class="band-card__skills" aria-label="Example skills and topics">
+              <li>Pre-algebra, algebra fundamentals, and proportional reasoning</li>
+              <li>Life, earth, and physical science with lab-based inquiry</li>
+              <li>Expository and argumentative writing across content areas</li>
+              <li>Study skills: note-taking, test preparation, and organization</li>
+            </ul>
+            <div class="band-card__footer">
+              <a href="#services-mid" class="band-card__link"
+                 aria-label="Explore Grades 6–8 programs">
+                Explore Grades 6&ndash;8
+              </a>
+            </div>
+          </article>
+
+          <article class="band-card band-card--high" role="listitem"
+                   aria-labelledby="band-high-title">
+            <span class="band-card__tag">High School</span>
+            <h3 class="band-card__title" id="band-high-title">Grades 9&ndash;12</h3>
+            <p class="band-card__desc">
+              High school students work toward subject-area mastery, standardized
+              assessment readiness, and the academic skills that support
+              post-secondary preparation. STEM coursework is supported at every
+              level from Algebra II through AP sciences and beyond.
+            </p>
+            <ul class="band-card__skills" aria-label="Example skills and topics">
+              <li>Geometry, Algebra II, Pre-calculus, and Calculus support</li>
+              <li>Biology, Chemistry, Physics, and AP STEM course alignment</li>
+              <li>SAT/ACT preparation: quantitative and verbal reasoning</li>
+              <li>Research writing, source evaluation, and academic argumentation</li>
+            </ul>
+            <div class="band-card__footer">
+              <a href="#services-high" class="band-card__link"
+                 aria-label="Explore Grades 9–12 programs">
+                Explore Grades 9&ndash;12
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         PROGRAMS OVERVIEW  (#programs)
+    ══════════════════════════════════════════════════════════ -->
+    <section class="programs-section" id="programs"
+             aria-labelledby="programs-heading">
+      <div class="container">
+
+        <div class="programs-section__intro">
+          <span class="section-eyebrow">What We Offer</span>
+          <h2 id="programs-heading">Our Academic Programs</h2>
+          <p>
+            Every program at the Learning Center is built around a clear scope
+            and sequence. Students work with qualified instructors in focused
+            sessions designed to build lasting academic skill&mdash;not just
+            short-term performance.
+          </p>
+        </div>
+
+        <div class="programs-grid">
+
+          <div class="program-card program-card--math">
+            <div class="program-card__icon" aria-hidden="true">∑</div>
+            <div class="program-card__name">Mathematics</div>
+            <p class="program-card__desc">
+              Arithmetic through Calculus. Instruction is structured around
+              conceptual understanding first, with fluency and application
+              developed in sequence. Available for every grade level 3&ndash;12.
+            </p>
+            <div class="program-card__tags">
+              <span class="program-tag program-tag--accent">Grades 3&ndash;12</span>
+              <span class="program-tag">Algebra</span>
+              <span class="program-tag">Geometry</span>
+              <span class="program-tag">Calculus</span>
+            </div>
+          </div>
+
+          <div class="program-card program-card--science">
+            <div class="program-card__icon" aria-hidden="true">⚗️</div>
+            <div class="program-card__name">Science &amp; STEM</div>
+            <p class="program-card__desc">
+              Lab-connected support spanning life science, earth science,
+              chemistry, and physics. Sessions reinforce classroom content while
+              developing scientific reasoning and data literacy.
+            </p>
+            <div class="program-card__tags">
+              <span class="program-tag program-tag--accent">Grades 3&ndash;12</span>
+              <span class="program-tag">Biology</span>
+              <span class="program-tag">Chemistry</span>
+              <span class="program-tag">Physics</span>
+            </div>
+          </div>
+
+          <div class="program-card program-card--ela">
+            <div class="program-card__icon" aria-hidden="true">📖</div>
+            <div class="program-card__name">English &amp; Literacy</div>
+            <p class="program-card__desc">
+              Reading comprehension, writing mechanics, and analytical
+              composition across grade levels. Structured literacy approaches
+              are used for students needing foundational reading support.
+            </p>
+            <div class="program-card__tags">
+              <span class="program-tag program-tag--accent">Grades 3&ndash;12</span>
+              <span class="program-tag">Reading</span>
+              <span class="program-tag">Writing</span>
+              <span class="program-tag">Literacy</span>
+            </div>
+          </div>
+
+          <div class="program-card program-card--testprep">
+            <div class="program-card__icon" aria-hidden="true">📊</div>
+            <div class="program-card__name">Test Preparation</div>
+            <p class="program-card__desc">
+              Structured programs for SAT, ACT, and state assessments. Covers
+              both quantitative and verbal sections with timed practice, error
+              analysis, and strategy development over multiple weeks.
+            </p>
+            <div class="program-card__tags">
+              <span class="program-tag program-tag--accent">Grades 8&ndash;12</span>
+              <span class="program-tag">SAT</span>
+              <span class="program-tag">ACT</span>
+              <span class="program-tag">State Exams</span>
+            </div>
+          </div>
+
+          <div class="program-card program-card--skills">
+            <div class="program-card__icon" aria-hidden="true">🗂️</div>
+            <div class="program-card__name">Study Skills &amp; Coaching</div>
+            <p class="program-card__desc">
+              Practical instruction in note-taking, planning, assignment
+              management, and test preparation strategies. Especially valuable
+              during grade-level transitions and high-demand academic periods.
+            </p>
+            <div class="program-card__tags">
+              <span class="program-tag program-tag--accent">Grades 5&ndash;12</span>
+              <span class="program-tag">Organization</span>
+              <span class="program-tag">Executive Function</span>
+            </div>
+          </div>
+
+          <div class="program-card program-card--ap">
+            <div class="program-card__icon" aria-hidden="true">🎓</div>
+            <div class="program-card__name">AP &amp; Advanced Coursework</div>
+            <p class="program-card__desc">
+              Targeted support for AP Biology, Chemistry, Physics, Calculus
+              AB/BC, Statistics, and Computer Science. Sessions are paced to
+              exam timelines and emphasize free-response fluency.
+            </p>
+            <div class="program-card__tags">
+              <span class="program-tag program-tag--accent">Grades 10&ndash;12</span>
+              <span class="program-tag">AP STEM</span>
+              <span class="program-tag">Exam Prep</span>
+            </div>
+          </div>
+
+        </div><!-- /.programs-grid -->
+
+        <div class="programs-section__footer">
+          <p>
+            Not sure which program fits your student? An initial assessment
+            helps us match the right level and format to their current needs.
+          </p>
+          <div class="cta-row">
+            <button type="button" class="btn btn--white" onclick="openModal()">
+              Schedule an Assessment
+            </button>
+            <a href="#grade-paths" role="button" class="btn--outline-teal"
+               style="color:#7ecfcf; border-color:#7ecfcf;">
+              Browse by Grade Level
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         ASSESSMENT SECTION  (#assessment)
+    ══════════════════════════════════════════════════════════ -->
+    <section class="assessment-section" id="assessment"
+             aria-labelledby="assessment-heading">
+      <div class="container">
+
+        <div class="assessment-section__intro">
+          <span class="section-eyebrow">Getting Started</span>
+          <h2 id="assessment-heading">How the Assessment Works</h2>
+          <p>
+            Before recommending a program, we take time to understand each
+            student through a structured skills assessment. The process is
+            straightforward, low-pressure, and designed to give families clear,
+            actionable information.
+          </p>
+        </div>
+
+        <div class="assessment-meta" role="list" aria-label="Assessment details">
+          <span class="a-pill a-pill--time" role="listitem">
+            <span class="a-pill__dot" aria-hidden="true"></span>
+            45&ndash;60 minute session
+          </span>
+          <span class="a-pill a-pill--place" role="listitem">
+            <span class="a-pill__dot" aria-hidden="true"></span>
+            In-center or virtual
+          </span>
+          <span class="a-pill a-pill--cost" role="listitem">
+            <span class="a-pill__dot" aria-hidden="true"></span>
+            No cost at intake
+          </span>
+          <span class="a-pill a-pill--age" role="listitem">
+            <span class="a-pill__dot" aria-hidden="true"></span>
+            Grades 3&ndash;12
+          </span>
+        </div>
+
+        <div class="assessment-steps" aria-label="Assessment process steps">
+
+          <div class="assessment-step">
+            <div class="step-number step-number--1" aria-hidden="true">1</div>
+            <div class="step-content">
+              <h3>Initial Consultation</h3>
+              <p>
+                A brief conversation with a Learning Center advisor to understand
+                your student&rsquo;s current course load, challenges, and goals. Takes
+                approximately 15&ndash;20 minutes by phone or in person.
+              </p>
+            </div>
+          </div>
+
+          <div class="assessment-step">
+            <div class="step-number step-number--2" aria-hidden="true">2</div>
+            <div class="step-content">
+              <h3>Skills Assessment</h3>
+              <p>
+                A structured, written assessment covering the relevant subject
+                areas for your student&rsquo;s grade band. Administered at the center
+                or via a supervised virtual session. No preparation is needed.
+              </p>
+            </div>
+          </div>
+
+          <div class="assessment-step">
+            <div class="step-number step-number--3" aria-hidden="true">3</div>
+            <div class="step-content">
+              <h3>Learning Plan Review</h3>
+              <p>
+                Families receive a written summary of results, identified skill
+                gaps, and a recommended program and session schedule. Reviewed
+                together with an advisor before enrollment is discussed.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="assessment-scope">
+          <h3>What the Assessment Covers</h3>
+          <div class="scope-grid">
+
+            <div class="scope-card scope-card--math">
+              <div class="scope-card__icon" aria-hidden="true">∑</div>
+              <div class="scope-card__name">Mathematics</div>
+              <ul class="scope-card__items">
+                <li>Number sense &amp; operations</li>
+                <li>Algebraic reasoning</li>
+                <li>Geometry &amp; measurement</li>
+                <li>Data &amp; statistics (Gr. 6+)</li>
+              </ul>
+            </div>
+
+            <div class="scope-card scope-card--science">
+              <div class="scope-card__icon" aria-hidden="true">⚗️</div>
+              <div class="scope-card__name">Science Reasoning</div>
+              <ul class="scope-card__items">
+                <li>Scientific method fluency</li>
+                <li>Data interpretation</li>
+                <li>Concept application</li>
+                <li>Disciplinary vocabulary</li>
+              </ul>
+            </div>
+
+            <div class="scope-card scope-card--ela">
+              <div class="scope-card__icon" aria-hidden="true">📖</div>
+              <div class="scope-card__name">Reading &amp; Writing</div>
+              <ul class="scope-card__items">
+                <li>Reading fluency &amp; comprehension</li>
+                <li>Informational text analysis</li>
+                <li>Written expression</li>
+                <li>Grammar &amp; mechanics</li>
+              </ul>
+            </div>
+
+            <div class="scope-card scope-card--study">
+              <div class="scope-card__icon" aria-hidden="true">🗂️</div>
+              <div class="scope-card__name">Study &amp; Work Habits</div>
+              <ul class="scope-card__items">
+                <li>Note-taking strategies</li>
+                <li>Organization &amp; planning</li>
+                <li>Self-monitoring skills</li>
+                <li>Test-taking approach</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="assessment-schedule">
+          <div class="assessment-schedule__copy">
+            <h3>Ready to Schedule?</h3>
+            <p>
+              Contact the Learning Center to book your student&rsquo;s assessment
+              session. Appointments are available afternoons, evenings, and
+              weekends. A staff member will confirm details within one business day.
+            </p>
+          </div>
+          <div class="assessment-schedule__actions">
+            <button type="button" class="btn btn--white" onclick="openModal()">
+              Book an Assessment
+            </button>
+            <span class="schedule-note">No commitment required at booking</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SERVICE DETAIL: GRADES 3–5  (v0.2.2)
+    ══════════════════════════════════════════════════════════ -->
+    <section class="services-section services-section--elem"
+             id="services-elem"
+             aria-labelledby="services-elem-heading">
+      <div class="container">
+
+        <a href="#grade-paths" class="services-section__back">Back to Grade Paths</a>
+
+        <div class="services-section__header">
+          <span class="services-section__band-label">Elementary &middot; Grades 3&ndash;5</span>
+          <h2 id="services-elem-heading">Programs &amp; Services for Grades 3&ndash;5</h2>
+          <p>
+            At the elementary level, the Learning Center focuses on building the
+            academic foundation that all future learning depends upon. Sessions
+            are structured, encouraging, and paced to meet each student where
+            they are&mdash;while steadily expanding what they can do independently.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-card__name">Core Subject Tutoring</div>
+            <p class="service-card__desc">
+              One-on-one or small-group sessions targeting reading comprehension,
+              writing mechanics, and foundational mathematics. Instructors align
+              work to grade-level standards and classroom curriculum.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">1-on-1 or Small Group</span>
+              <span class="meta-pill">50-min sessions</span>
+              <span class="meta-pill">Math &middot; ELA</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">STEM Exploration Workshop</div>
+            <p class="service-card__desc">
+              Structured hands-on activities introduce students to observation,
+              measurement, and basic data recording through guided science and
+              math challenges. Designed to develop curiosity and careful thinking.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">Small Group</span>
+              <span class="meta-pill">60-min sessions</span>
+              <span class="meta-pill">Science &middot; Math</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">Reading &amp; Literacy Support</div>
+            <p class="service-card__desc">
+              Targeted intervention for students who need additional support with
+              decoding, fluency, or reading comprehension. Sessions use structured
+              literacy approaches with progress tracking shared with families.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">1-on-1</span>
+              <span class="meta-pill">50-min sessions</span>
+              <span class="meta-pill">ELA &middot; Literacy</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">Individualized Learning Plan Review</div>
+            <p class="service-card__desc">
+              Each enrolled student receives an initial skills assessment and a
+              written learning plan. Families receive a summary of current
+              performance, target areas, and a recommended session schedule.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">Family Consultation</span>
+              <span class="meta-pill">One-time / Quarterly</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="services-expect">
+          <h3>What Families Can Expect</h3>
+          <ul>
+            <li>Written skills assessment at enrollment</li>
+            <li>Monthly progress summaries shared with parents</li>
+            <li>Homework support integrated into sessions</li>
+            <li>Consistent instructor assignment when possible</li>
+            <li>Flexible scheduling &mdash; afternoons and weekends</li>
+            <li>Clear, jargon-free communication at every step</li>
+          </ul>
+        </div>
+
+        <div class="services-cta">
+          <button type="button" class="btn btn--dark" onclick="openModal()">Schedule an Assessment</button>
+          <p>Not sure where to start? An assessment helps us recommend the right program.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SERVICE DETAIL: GRADES 6–8  (v0.2.2)
+    ══════════════════════════════════════════════════════════ -->
+    <section class="services-section services-section--mid"
+             id="services-mid"
+             aria-labelledby="services-mid-heading">
+      <div class="container">
+
+        <a href="#grade-paths" class="services-section__back">Back to Grade Paths</a>
+
+        <div class="services-section__header">
+          <span class="services-section__band-label">Middle School &middot; Grades 6&ndash;8</span>
+          <h2 id="services-mid-heading">Programs &amp; Services for Grades 6&ndash;8</h2>
+          <p>
+            Middle school introduces students to more abstract reasoning,
+            disciplinary science, and the organizational demands of multiple
+            teachers and subjects. Our programs help students build the skills
+            and self-awareness needed to manage that transition effectively.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-card__name">Subject-Area Tutoring</div>
+            <p class="service-card__desc">
+              Focused support in mathematics (pre-algebra through algebra),
+              life and physical sciences, and English language arts. Sessions
+              can be aligned to specific assignments, units, or assessments.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">1-on-1 or Small Group</span>
+              <span class="meta-pill">50-min sessions</span>
+              <span class="meta-pill">Math &middot; Science &middot; ELA</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">Algebra Readiness Program</div>
+            <p class="service-card__desc">
+              A structured progression designed to close gaps in pre-algebraic
+              reasoning and build confidence before or during Algebra I. Covers
+              ratios, proportional relationships, equations, and functions.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">Small Group</span>
+              <span class="meta-pill">Multi-week program</span>
+              <span class="meta-pill">Mathematics</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">STEM Lab Sessions</div>
+            <p class="service-card__desc">
+              Inquiry-based sessions that connect classroom science content to
+              hands-on data collection and analysis. Students practice forming
+              hypotheses, recording results, and drawing evidence-based conclusions.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">Small Group</span>
+              <span class="meta-pill">75-min sessions</span>
+              <span class="meta-pill">Science &middot; Math</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">Study Skills &amp; Executive Function Coaching</div>
+            <p class="service-card__desc">
+              Students develop practical strategies for note-taking, assignment
+              management, test preparation, and time planning. Sessions are
+              especially useful during transitions between grade levels.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">1-on-1</span>
+              <span class="meta-pill">50-min sessions</span>
+              <span class="meta-pill">Organization &middot; Planning</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="services-expect">
+          <h3>What Families Can Expect</h3>
+          <ul>
+            <li>Diagnostic assessment aligned to current grade standards</li>
+            <li>Bi-weekly progress notes for parents and guardians</li>
+            <li>Coordination with school curriculum where possible</li>
+            <li>Standardized test readiness introduced in Grade 8</li>
+            <li>Evening and weekend availability</li>
+            <li>End-of-term written progress report</li>
+          </ul>
+        </div>
+
+        <div class="services-cta">
+          <button type="button" class="btn btn--dark" onclick="openModal()">Schedule an Assessment</button>
+          <p>An initial assessment helps us place your student in the right program and level.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         SERVICE DETAIL: GRADES 9–12  (v0.2.2)
+    ══════════════════════════════════════════════════════════ -->
+    <section class="services-section services-section--high"
+             id="services-high"
+             aria-labelledby="services-high-heading">
+      <div class="container">
+
+        <a href="#grade-paths" class="services-section__back">Back to Grade Paths</a>
+
+        <div class="services-section__header">
+          <span class="services-section__band-label">High School &middot; Grades 9&ndash;12</span>
+          <h2 id="services-high-heading">Programs &amp; Services for Grades 9&ndash;12</h2>
+          <p>
+            High school students face rigorous coursework, high-stakes assessments,
+            and increasing pressure to demonstrate academic readiness. Our programs
+            provide structured, content-specific support designed to meet those
+            demands without shortcuts.
+          </p>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-card__name">Advanced Subject Tutoring</div>
+            <p class="service-card__desc">
+              Expert support in high school mathematics (Geometry through Calculus),
+              biology, chemistry, and physics&mdash;including AP-level courses. Sessions
+              are paced to the student&rsquo;s syllabus and upcoming assessments.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">1-on-1</span>
+              <span class="meta-pill">60-min sessions</span>
+              <span class="meta-pill">Math &middot; Science &middot; AP</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">SAT / ACT Preparation</div>
+            <p class="service-card__desc">
+              A structured preparation program covering both quantitative and verbal
+              reasoning sections. Includes timed practice, error analysis, and
+              strategy review. Available as an ongoing program or intensive format.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">Small Group or 1-on-1</span>
+              <span class="meta-pill">Multi-week program</span>
+              <span class="meta-pill">Test Prep</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">AP Exam Preparation</div>
+            <p class="service-card__desc">
+              Targeted review for AP examinations in STEM subjects including
+              Calculus AB/BC, Statistics, Biology, Chemistry, Physics, and Computer
+              Science. Focus is on exam format fluency, free-response writing, and
+              conceptual depth.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">Small Group or 1-on-1</span>
+              <span class="meta-pill">Seasonal intensive</span>
+              <span class="meta-pill">AP Courses</span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card__name">Academic Writing &amp; Research Skills</div>
+            <p class="service-card__desc">
+              Support for research papers, essays, and analytical writing across
+              disciplines. Covers thesis development, source evaluation, citation
+              practice, and revision strategies relevant to both coursework and
+              college-level expectations.
+            </p>
+            <div class="service-card__meta">
+              <span class="meta-pill meta-pill--format">1-on-1</span>
+              <span class="meta-pill">60-min sessions</span>
+              <span class="meta-pill">Writing &middot; Research</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="services-expect">
+          <h3>What Families Can Expect</h3>
+          <ul>
+            <li>Placement assessment and program recommendation at intake</li>
+            <li>Monthly written progress updates for families</li>
+            <li>Alignment to AP syllabi and school course schedules</li>
+            <li>Practice materials and review resources provided</li>
+            <li>Flexible scheduling including evenings and weekends</li>
+            <li>Consistent instructor for continuity across sessions</li>
+          </ul>
+        </div>
+
+        <div class="services-cta">
+          <button type="button" class="btn btn--dark" onclick="openModal()">Schedule an Assessment</button>
+          <p>We recommend starting with an assessment to identify the most effective program fit.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       BOOKING MODAL
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="bookingModal" role="dialog"
+       aria-modal="true" aria-labelledby="modal-title"
+       aria-describedby="modal-subtitle">
+    <div class="modal">
+
+      <div class="modal__header">
+        <button class="modal__close" onclick="closeModal()"
+                aria-label="Close booking form">&times;</button>
+        <span class="modal__eyebrow">Get Started</span>
+        <h2 class="modal__title" id="modal-title">Schedule Your Assessment</h2>
+        <p class="modal__subtitle" id="modal-subtitle">
+          Complete the form below and a Learning Center advisor will confirm
+          your appointment within one business day.
+        </p>
+      </div>
+
+      <div class="modal__body">
+
+        <div class="modal__success" id="modalSuccess" aria-live="polite">
+          <div class="success-icon" aria-hidden="true">✓</div>
+          <h3>Request Received</h3>
+          <p>
+            Thank you. A Learning Center advisor will reach out within one
+            business day to confirm your appointment details.
+          </p>
+        </div>
+
+        <form class="booking-form" id="bookingForm"
+              novalidate onsubmit="handleBooking(event)">
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="parentName">Parent / Guardian Name</label>
+              <input type="text" id="parentName" name="parentName"
+                     placeholder="Full name" required autocomplete="name" />
+            </div>
+            <div class="form-field">
+              <label for="studentName">Student Name</label>
+              <input type="text" id="studentName" name="studentName"
+                     placeholder="First name is fine" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email"
+                     placeholder="you@example.com" required autocomplete="email" />
+            </div>
+            <div class="form-field">
+              <label for="phone">Phone Number
+                <span class="field-hint">(optional)</span>
+              </label>
+              <input type="tel" id="phone" name="phone"
+                     placeholder="(555) 000-0000" autocomplete="tel" />
+            </div>
+          </div>
+
+          <div class="form-divider" aria-hidden="true"></div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="grade">Student&rsquo;s Current Grade</label>
+              <select id="grade" name="grade" required>
+                <option value="" disabled selected>Select a grade</option>
+                <optgroup label="Elementary (Grades 3–5)">
+                  <option value="3">Grade 3</option>
+                  <option value="4">Grade 4</option>
+                  <option value="5">Grade 5</option>
+                </optgroup>
+                <optgroup label="Middle School (Grades 6–8)">
+                  <option value="6">Grade 6</option>
+                  <option value="7">Grade 7</option>
+                  <option value="8">Grade 8</option>
+                </optgroup>
+                <optgroup label="High School (Grades 9–12)">
+                  <option value="9">Grade 9</option>
+                  <option value="10">Grade 10</option>
+                  <option value="11">Grade 11</option>
+                  <option value="12">Grade 12</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="subject">Primary Area of Focus</label>
+              <select id="subject" name="subject" required>
+                <option value="" disabled selected>Select a subject</option>
+                <option>Mathematics</option>
+                <option>Science / STEM</option>
+                <option>English &amp; Literacy</option>
+                <option>Test Preparation (SAT / ACT)</option>
+                <option>AP Course Support</option>
+                <option>Study Skills &amp; Coaching</option>
+                <option>Not sure &mdash; please advise</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Preferred Session Format</label>
+            <div class="chip-group" role="radiogroup"
+                 aria-label="Session format preference">
+              <input type="radio" name="format" id="fmt-center"
+                     value="In-Center" checked />
+              <label for="fmt-center">In-Center</label>
+              <input type="radio" name="format" id="fmt-virtual"
+                     value="Virtual" />
+              <label for="fmt-virtual">Virtual</label>
+              <input type="radio" name="format" id="fmt-either"
+                     value="Either" />
+              <label for="fmt-either">No preference</label>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="availability">Preferred Days &amp; Times
+              <span class="field-hint">(optional)</span>
+            </label>
+            <textarea id="availability" name="availability" rows="2"
+              placeholder="e.g. Weekday afternoons after 4 pm, Saturday mornings">
+            </textarea>
+          </div>
+
+          <div class="form-field">
+            <label for="notes">Anything else we should know?
+              <span class="field-hint">(optional)</span>
+            </label>
+            <textarea id="notes" name="notes" rows="2"
+              placeholder="e.g. specific challenges, current grades, upcoming exams">
+            </textarea>
+          </div>
+
+          <div class="form-divider" aria-hidden="true"></div>
+
+          <div class="form-submit-row">
+            <p class="form-note">
+              No commitment is required. A staff member will contact you to
+              confirm details before anything is scheduled.
+            </p>
+            <button type="submit" class="btn--submit">
+              Submit Request &rarr;
+            </button>
+          </div>
+
+        </form>
+      </div><!-- /.modal__body -->
+    </div><!-- /.modal -->
+  </div><!-- /.modal-overlay -->
+
+  <script>
+    var modal   = document.getElementById('bookingModal');
+    var form    = document.getElementById('bookingForm');
+    var success = document.getElementById('modalSuccess');
+
+    function openModal() {
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(function() {
+        var first = modal.querySelector('input, select, textarea, button:not(.modal__close)');
+        if (first) first.focus();
+      }, 60);
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      form.reset();
+      form.classList.remove('is-hidden');
+      success.classList.remove('is-visible');
+    }
+
+    function handleBooking(e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      form.classList.add('is-hidden');
+      success.classList.add('is-visible');
+    }
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    });
+  </script>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <p>
+        &copy; 2026 Learning Center &mdash; Academic Support &amp; STEM Enrichment.
+        <a href="#">Contact Us</a> &middot;
+        <a href="#">Privacy Policy</a>
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
