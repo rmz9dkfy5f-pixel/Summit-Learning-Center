@@ -633,6 +633,47 @@
       margin-top: -0.5rem;
     }
 
+    /* ── Program Format Band ── */
+    .format-band {
+      background-color: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .format-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .format-item {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--color-border);
+    }
+
+    .format-item:last-child {
+      border-right: none;
+    }
+
+    .format-item__label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .format-item__value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .format-item__note {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+    }
+
     /* ── Responsive ── */
     @media (max-width: 640px) {
       .hero {
@@ -652,6 +693,26 @@
 
       .site-nav {
         display: none;
+      }
+
+      .format-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .format-item {
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .format-item:nth-child(odd) {
+        border-right: 1px solid var(--color-border);
+      }
+
+      .format-item:nth-child(even) {
+        border-right: none;
+      }
+
+      .format-item:nth-last-child(-n+2) {
+        border-bottom: none;
       }
     }
   </style>
@@ -694,6 +755,38 @@
         </div>
       </div>
     </section>
+
+    <!-- ── Program Format ── -->
+    <!-- TODO: Replace "[Location name and address]" with the actual location before publishing -->
+    <div class="format-band" role="region" aria-label="Program format and schedule">
+      <div class="container">
+        <dl class="format-grid">
+
+          <div class="format-item">
+            <dt class="format-item__label">Location</dt>
+            <dd class="format-item__value">In person</dd>
+            <dd class="format-item__note">[Location name and address]</dd>
+          </div>
+
+          <div class="format-item">
+            <dt class="format-item__label">Session length</dt>
+            <dd class="format-item__value">60 minutes</dd>
+          </div>
+
+          <div class="format-item">
+            <dt class="format-item__label">Frequency</dt>
+            <dd class="format-item__value">3 sessions per week</dd>
+            <dd class="format-item__note">Flexible scheduling available</dd>
+          </div>
+
+          <div class="format-item">
+            <dt class="format-item__label">Instruction</dt>
+            <dd class="format-item__value">Small group</dd>
+          </div>
+
+        </dl>
+      </div>
+    </div>
 
     <!-- ── Grade Drill-Down ── -->
     <section class="section" id="grades" aria-labelledby="grades-title">
