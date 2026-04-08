@@ -555,6 +555,84 @@
       font-weight: 600;
     }
 
+    /* ── Consultation Form ── */
+    .consult-form {
+      max-width: 560px;
+      margin-inline: auto;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .consult-form__field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      text-align: left;
+    }
+
+    .consult-form label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .consult-form input,
+    .consult-form select,
+    .consult-form textarea {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      color: var(--color-text);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.65rem 0.875rem;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .consult-form input:focus,
+    .consult-form select:focus,
+    .consult-form textarea:focus {
+      outline: 2px solid rgba(255,255,255,0.7);
+      outline-offset: 2px;
+      border-color: transparent;
+    }
+
+    .consult-form textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .consult-form__submit {
+      background-color: #fff;
+      color: var(--color-accent);
+      border: 2px solid transparent;
+      border-radius: var(--radius);
+      padding: 0.75rem 1.5rem;
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .consult-form__submit:hover,
+    .consult-form__submit:focus {
+      background-color: var(--color-tag);
+      outline: 2px solid rgba(255,255,255,0.7);
+      outline-offset: 2px;
+    }
+
+    .consult-form__note {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      margin-top: -0.5rem;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 640px) {
       .hero {
@@ -958,12 +1036,70 @@
           Speak with an academic advisor to find the right program for your student's
           current grade level, goals, and schedule.
         </p>
-        <div class="hero__cta-group" role="group" aria-label="Consultation actions">
-          <a class="btn btn--primary" href="#consult" style="background-color:#fff; color:var(--color-accent);">
-            Book a Consultation
-          </a>
-          <a class="btn btn--outline" href="#programs">View Learning Paths</a>
-        </div>
+        <form
+          class="consult-form"
+          action="mailto:PLACEHOLDER@domain.com"
+          method="post"
+          enctype="text/plain"
+          aria-label="Book a consultation inquiry form"
+        >
+          <div class="consult-form__field">
+            <label for="consult-name">Name</label>
+            <input
+              type="text"
+              id="consult-name"
+              name="name"
+              autocomplete="name"
+              required
+              placeholder="Your full name"
+            />
+          </div>
+
+          <div class="consult-form__field">
+            <label for="consult-email">Email</label>
+            <input
+              type="email"
+              id="consult-email"
+              name="email"
+              autocomplete="email"
+              required
+              placeholder="your@email.com"
+            />
+          </div>
+
+          <div class="consult-form__field">
+            <label for="consult-grade">Grade Level</label>
+            <select id="consult-grade" name="grade_level" required>
+              <option value="" disabled selected>Select a grade</option>
+              <option value="Grade 3">Grade 3</option>
+              <option value="Grade 4">Grade 4</option>
+              <option value="Grade 5">Grade 5</option>
+              <option value="Grade 6">Grade 6</option>
+              <option value="Grade 7">Grade 7</option>
+              <option value="Grade 8">Grade 8</option>
+              <option value="Grade 9">Grade 9</option>
+              <option value="Grade 10">Grade 10</option>
+              <option value="Grade 11">Grade 11</option>
+              <option value="Grade 12">Grade 12</option>
+            </select>
+          </div>
+
+          <div class="consult-form__field">
+            <label for="consult-message">Message</label>
+            <textarea
+              id="consult-message"
+              name="message"
+              required
+              placeholder="Tell us about your student's current grade, goals, or any questions you have."
+            ></textarea>
+          </div>
+
+          <p class="consult-form__note">
+            Replace <strong>PLACEHOLDER@domain.com</strong> in the form's <code>action</code> attribute with your actual contact address before publishing.
+          </p>
+
+          <button type="submit" class="consult-form__submit">Submit Inquiry</button>
+        </form>
       </div>
     </section>
 
