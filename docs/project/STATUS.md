@@ -10,8 +10,10 @@ site file was modified, replaced, or removed.
 
 ## Last Updated
 
-2026-09-10 — Starter Kit v3.10.0 migration (this push). This push will be tagged `v0.3.0`,
-applied in Section 7 of the session-end workflow (not yet applied as of this commit).
+2026-09-10 — Starter Kit v3.10.0 migration and session-end closeout. Final pushed commit
+`313c0c08a9f851a879aa7195d23aa4d375107bbd`, tagged `v0.3.0` (tag pushed: yes; remote tag
+verified: yes). Snapshot created and verified at
+`/Users/ant/WorkSync/Projects/RepoBackups/Summit-Learning-Center/v0.3.0/`.
 
 ## Working
 
