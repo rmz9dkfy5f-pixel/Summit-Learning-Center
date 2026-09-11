@@ -5,8 +5,9 @@
 Static HTML/CSS STEM learning center site (grades 3–12), served from `docs/` via GitHub Pages.
 Site content was dormant since 2026-04-08 (previous latest published version:
 `docs/v0.2.5/index.html`) until this push, which adds a new published version and redesigns the
-site root. This push will be tagged `v0.3.1`, applied in Section 7 of the session-end workflow
-(not yet applied as of this commit).
+site root. Final pushed commit `d82ecc087a83a8a77f0c0674805dca7b537fd20d`, tagged `v0.3.1` (tag
+pushed: yes; remote tag verified: yes). Snapshot created and verified at
+`/Users/ant/WorkSync/Projects/RepoBackups/Summit-Learning-Center/v0.3.1/`.
 
 ## Last Updated
 
