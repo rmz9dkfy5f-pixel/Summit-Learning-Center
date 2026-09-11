@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
   <title>Project Documentation Versions</title>
   <style>
     :root {
@@ -22,7 +23,10 @@
       --border: rgba(255,255,255,0.10);
       --shadow: 0 24px 60px rgba(0,0,0,0.34);
       --radius-lg: 28px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
       --radius-pill: 999px;
+      --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
     }
 
     * { box-sizing: border-box; }
@@ -46,8 +50,7 @@
       padding: 0 1.25rem;
     }
 
-    /* Shared panel surface — applied to many elements across the page,
-       rather than one box wrapping everything. */
+    /* Shared panel surface — the house recipe, matching the v0.3.1 site. */
     .panel-surface {
       background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
       border: 1px solid var(--border);
@@ -55,279 +58,312 @@
       box-shadow: var(--shadow);
     }
 
-    /* ══════════════════════════════════════════════════════════════
-       HERO
-    ══════════════════════════════════════════════════════════════ */
-    .hero { padding: 3.25rem 0 2rem; }
+    .svg-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 
-    .hero-wrap {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.5rem;
-      align-items: stretch;
+    /* Icons inherit colour and size from their parent, so one sprite
+       definition serves every size and accent on the page. */
+    .icon {
+      width: 1em; height: 1em;
+      flex: none;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
-    .hero-copy { padding: 2.25rem; display: flex; flex-direction: column; justify-content: center; }
+    /* ══════════════════════════════════════════════════════════════
+       HERO — full-bleed, centered
+    ══════════════════════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(3rem, 7vw, 5.5rem) 0 clamp(2.5rem, 5vw, 4rem);
+      text-align: center;
+    }
+
+    .hero__aura { position: absolute; inset: 0; pointer-events: none; }
+    .hero__aura::before,
+    .hero__aura::after {
+      content: ""; position: absolute; border-radius: 50%;
+    }
+    .hero__aura::before {
+      top: -220px; left: -140px; width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(47,123,255,0.20) 0%, transparent 68%);
+      animation: drift-a 26s ease-in-out infinite;
+    }
+    .hero__aura::after {
+      top: -180px; right: -160px; width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(255,123,27,0.16) 0%, transparent 68%);
+      animation: drift-b 33s ease-in-out infinite;
+    }
+    .hero__dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.055) 1px, transparent 1px);
+      background-size: 28px 28px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 38%, #000 0%, transparent 100%);
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 38%, #000 0%, transparent 100%);
+    }
+
+    .hero__inner { position: relative; z-index: 1; }
 
     .brand {
       display: inline-flex; align-items: center; gap: 12px;
-      margin-bottom: 22px;
+      margin-bottom: 1.15rem;
     }
     .brand-mark {
-      width: 42px; height: 42px; border-radius: 13px;
-      display: grid; place-items: center; font-size: 1.15rem;
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      display: grid; place-items: center;
+      font-size: 1.45rem; color: #fff;
       background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
-      box-shadow: 0 10px 22px rgba(47,123,255,0.28);
+      box-shadow: 0 12px 26px rgba(47,123,255,0.30);
     }
-    .brand-word { font-weight: 800; letter-spacing: 0.01em; font-size: 1.02rem; color: var(--text); }
+    .brand-word { font-weight: 800; letter-spacing: 0.01em; font-size: 1.05rem; color: var(--text); }
+
+    .eyebrow {
+      display: inline-flex; align-items: center;
+      padding: 0.45rem 0.95rem; border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      font-size: 0.74rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent-blue-light);
+      margin-bottom: 1.1rem;
+    }
 
     h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2.1rem, 4.4vw, 3.2rem);
-      line-height: 1.05;
-      letter-spacing: -0.035em;
+      margin: 0 0 0.7rem;
+      font-size: clamp(2.3rem, 6vw, 4rem);
+      line-height: 1.03;
+      letter-spacing: -0.038em;
       color: var(--text);
+    }
+    /* Guarded: without the @supports test, a failed background-clip plus a
+       transparent text fill would render the headline invisible. */
+    @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+      h1 {
+        background: linear-gradient(175deg, #ffffff 0%, #cfe0f4 55%, #9dbcdd 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
     }
 
     p.lead {
-      margin: 0;
+      margin: 0 auto;
       color: var(--muted);
-      font-size: 1.05rem;
+      font-size: clamp(1rem, 1.6vw, 1.1rem);
       line-height: 1.6;
-      max-width: 52ch;
+      max-width: 56ch;
     }
 
-    /* ── Hero visual: education-themed decorative stage ─────────── */
-    .hero-visual { padding: 24px; overflow: hidden; }
-
-    .stage {
-      position: relative;
-      min-height: 420px; height: 100%;
-      border-radius: 24px; overflow: hidden;
-      border: 1px solid var(--border);
-      background: linear-gradient(135deg, #11243c 0%, #0a1524 100%);
-    }
-    .stage__grid {
-      position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
-      background-size: 28px 28px;
-    }
-    .stage__chip {
-      position: absolute; top: 18px; left: 18px; z-index: 2;
-      padding: 0.4rem 0.8rem; border-radius: var(--radius-pill);
-      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
-      text-transform: uppercase; color: var(--muted);
-    }
-
-    /* Donut ring: four equal quarters, one per published version. */
+    /* ── Ring: the hero centerpiece. Four equal quarters, one per version. ── */
     .ring {
-      position: absolute; top: 16px; right: 18px; z-index: 2;
-      width: 132px; aspect-ratio: 1; border-radius: 50%;
+      position: relative;
+      width: clamp(158px, 23vw, 196px);
+      aspect-ratio: 1;
+      margin: clamp(1.8rem, 4vw, 2.6rem) auto clamp(1.4rem, 3vw, 2rem);
       display: grid; place-items: center;
-      background:
-        radial-gradient(circle, #0b1a2c 56%, transparent 57%),
-        conic-gradient(
-          var(--accent-blue-dark) 0deg 90deg,
-          var(--accent-blue) 90deg 180deg,
-          var(--accent-blue-light) 180deg 270deg,
-          var(--accent-orange) 270deg 360deg
-        );
-      box-shadow: inset 0 0 0 10px rgba(255,255,255,0.03);
     }
-    .ring__inner { width: 84px; text-align: center; }
-    .ring__value { display: block; font-size: 1.9rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    .ring__spin {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: conic-gradient(
+        var(--accent-blue-dark) 0deg 90deg,
+        var(--accent-blue) 90deg 180deg,
+        var(--accent-blue-light) 180deg 270deg,
+        var(--accent-orange) 270deg 360deg
+      );
+      animation: spin 34s linear infinite;
+    }
+    .ring__glow {
+      position: absolute; inset: -14%; border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,123,255,0.26) 0%, transparent 62%);
+      filter: blur(2px);
+    }
+    /* An opaque core plate sits above the conic disc, so no mask is needed
+       and the rotation reads as a ring rather than a spinning disc. */
+    .ring__core {
+      position: relative; z-index: 1;
+      width: 70%; aspect-ratio: 1; border-radius: 50%;
+      display: grid; place-items: center; text-align: center;
+      background: linear-gradient(180deg, #12243c, #0a1524);
+      border: 1px solid var(--border);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .ring__value {
+      display: block;
+      font-size: clamp(1.9rem, 4vw, 2.5rem);
+      font-weight: 800; line-height: 1; letter-spacing: -0.04em;
+    }
     .ring__label {
-      display: block; margin-top: 5px;
-      font-size: 0.58rem; line-height: 1.15; color: var(--muted);
-      text-transform: uppercase; letter-spacing: 0.08em;
+      display: block; margin-top: 6px; padding: 0 0.6rem;
+      font-size: 0.58rem; line-height: 1.2; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.09em;
     }
 
-    .stage__pills {
-      position: absolute; left: 20px; right: 168px; top: 96px; z-index: 1;
-      display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px;
+    /* ── Version pills: a wrapping flow row — cannot collide at any width ── */
+    .version-pills {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px; margin: 0 auto; max-width: 480px;
     }
-    .stage-pill {
-      padding: 9px 10px; border-radius: 14px;
+    .vpill {
+      padding: 0.4rem 0.95rem; border-radius: var(--radius-pill);
       border: 1px solid var(--border); background: rgba(255,255,255,0.04);
-      font-size: 0.76rem; font-weight: 700; color: var(--muted);
-      text-align: center; white-space: nowrap;
+      font-size: 0.78rem; font-weight: 700; color: var(--muted);
+      letter-spacing: 0.01em;
     }
-    .stage-pill--latest {
+    .vpill--latest {
       background: rgba(255,123,27,0.12);
       border-color: rgba(255,123,27,0.34);
       color: var(--accent-orange-light);
     }
 
-    /* Open-book centerpiece, built from CSS shapes only. */
-    .book {
-      position: absolute; left: 24px; right: 24px; bottom: 24px;
-      height: 152px; z-index: 1;
-    }
-    .book::after {
-      content: ""; position: absolute;
-      left: 14%; right: 14%; bottom: 4px; height: 26px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%);
-    }
-    .book__page {
-      position: absolute; bottom: 22px; width: 45%; height: 96px;
-      border: 2px solid rgba(255,255,255,0.14);
-      box-shadow: 0 14px 26px rgba(0,0,0,0.32);
-    }
-    .book__page::before {
-      content: ""; position: absolute; inset: 13px 12px;
-      background: repeating-linear-gradient(180deg,
-        rgba(255,255,255,0.20) 0 2px, transparent 2px 13px);
-      opacity: 0.55;
-    }
-    .book__page--left {
-      left: 3%;
-      transform: skewY(-7deg);
-      border-radius: 12px 4px 4px 14px;
-      background: linear-gradient(180deg, rgba(47,123,255,0.34), rgba(11,26,44,0.72));
-      border-color: rgba(100,162,255,0.38);
-    }
-    .book__page--right {
-      right: 3%;
-      transform: skewY(7deg);
-      border-radius: 4px 12px 14px 4px;
-      background: linear-gradient(180deg, rgba(255,123,27,0.28), rgba(11,26,44,0.72));
-      border-color: rgba(255,177,107,0.34);
-    }
-    .book__spine {
-      position: absolute; left: 50%; bottom: 20px;
-      width: 4px; height: 104px; transform: translateX(-50%);
-      border-radius: 2px;
-      background: linear-gradient(180deg, var(--accent-blue-light), rgba(255,255,255,0.06));
-      box-shadow: 0 0 18px rgba(100,162,255,0.35);
-    }
-
-    /* ── Factual meta strip (true, derived facts only) ──────────── */
-    .meta-strip {
-      display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 10px; margin: 1.25rem 0 0; max-width: 620px;
-    }
-    .meta-strip .stat {
-      padding: 0.8rem 0.9rem; border-radius: 18px;
-      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-      font-size: 0.78rem; color: var(--muted); line-height: 1.3;
-    }
-    .meta-strip .stat strong {
-      display: block; color: var(--text); font-size: 0.92rem; margin-bottom: 2px;
-    }
-
     /* ══════════════════════════════════════════════════════════════
        SECTION HEADINGS
     ══════════════════════════════════════════════════════════════ */
-    .section-head { margin-bottom: 1.15rem; }
+    .section-head { margin-bottom: 1.25rem; }
     .section-head h2 {
       margin: 0;
-      font-size: clamp(1.35rem, 2.6vw, 1.85rem);
-      letter-spacing: -0.025em;
+      font-size: clamp(1.4rem, 2.7vw, 1.95rem);
+      letter-spacing: -0.028em;
       line-height: 1.2;
       color: var(--text);
     }
 
     /* ══════════════════════════════════════════════════════════════
-       VERSIONS GRID
+       RELEASES
     ══════════════════════════════════════════════════════════════ */
-    .versions-section { padding: 1.5rem 0 2rem; }
+    .versions-section { padding: clamp(1.5rem, 4vw, 2.5rem) 0 1rem; }
 
-    .versions-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 18px;
-    }
-
-    .version-card {
+    .release {
       --card-accent: var(--accent-blue);
-      display: flex; flex-direction: column;
+      position: relative;
+      display: grid; gap: 1.1rem;
+      padding: 1.15rem;
       color: inherit; text-decoration: none;
       overflow: hidden;
-      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      transition: transform 0.2s var(--ease), border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .version-card--v0 { --card-accent: var(--accent-blue-dark); }
-    .version-card--v1 { --card-accent: var(--accent-blue); }
-    .version-card--v2 { --card-accent: var(--accent-blue-light); }
-    .version-card--v3 { --card-accent: var(--accent-orange); }
+    .release--v0 { --card-accent: var(--accent-blue-dark); }
+    .release--v1 { --card-accent: var(--accent-blue); }
+    .release--v2 { --card-accent: var(--accent-blue-light); }
+    .release--v3 { --card-accent: var(--accent-orange); }
 
-    .version-card:hover,
-    .version-card:focus-visible {
-      transform: translateY(-3px);
+    .release:hover,
+    .release:focus-visible {
+      transform: translateY(-4px);
       border-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
-      box-shadow: 0 30px 70px rgba(0,0,0,0.42);
-      outline: none;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.44);
+    }
+    /* Kept separate and last: the previous build set outline:none here, which
+       left keyboard users with no focus indicator at all. */
+    .release:focus-visible {
+      outline: 2px solid var(--accent-blue-light);
+      outline-offset: 3px;
     }
 
-    .version-card__top { position: relative; padding: 16px 16px 0; }
+    .release__main { display: flex; flex-direction: column; gap: 0.55rem; min-width: 0; }
 
-    .version-badge {
-      position: absolute; top: 12px; left: 18px; z-index: 2;
-      padding: 0.45rem 0.95rem; border-radius: var(--radius-pill);
-      font-size: 1rem; font-weight: 800; letter-spacing: -0.01em;
+    .release__head { display: flex; align-items: center; gap: 0.6rem; }
+
+    .release__badge {
+      padding: 0.4rem 0.9rem; border-radius: var(--radius-pill);
+      font-size: 0.98rem; font-weight: 800; letter-spacing: -0.01em;
       color: var(--text);
-      background: color-mix(in srgb, var(--card-accent) 30%, rgba(9,18,33,0.92));
+      background: color-mix(in srgb, var(--card-accent) 28%, rgba(9,18,33,0.92));
       border: 1px solid color-mix(in srgb, var(--card-accent) 58%, transparent);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.38);
+    }
+    /* Recency marker — a slow breath reads as "current", not "best". */
+    .release__dot {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--accent-orange);
+      box-shadow: 0 0 0 4px rgba(255,123,27,0.16);
+      animation: breathe 3.4s ease-in-out infinite;
     }
 
-    .version-scene {
-      position: relative; margin-top: 44px; min-height: 134px;
-      border-radius: 22px; overflow: hidden;
-      border: 1px solid var(--border);
-      background:
-        radial-gradient(circle at 80% 24%, color-mix(in srgb, var(--card-accent) 26%, transparent), transparent 62%),
-        linear-gradient(135deg, #0f1f36 0%, #09131f 100%);
-    }
-    .version-scene::before {
-      content: ""; position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
-      background-size: 26px 26px;
-    }
-    /* Floor line, echoing the hero stage's sense of a surface. */
-    .version-scene::after {
-      content: ""; position: absolute; left: 10%; right: 10%; bottom: 26px;
-      height: 1px; background: linear-gradient(90deg, transparent,
-        color-mix(in srgb, var(--card-accent) 50%, transparent), transparent);
-    }
-    .version-scene__glyph {
-      position: absolute; right: 16px; bottom: -10px;
-      font-size: 4.6rem; line-height: 1;
-      opacity: 0.26; transform: rotate(-8deg);
-    }
+    .release__desc { margin: 0; color: var(--muted); font-size: 0.96rem; }
 
-    .version-card__body {
-      padding: 15px 18px 18px;
-      display: flex; flex-direction: column; gap: 0.6rem; flex: 1;
-    }
-    .version-desc { color: var(--muted); font-size: 0.95rem; }
-
-    .version-tag {
+    .release__chip {
       display: inline-flex; align-items: center; gap: 0.45rem;
       width: fit-content;
       padding: 0.25rem 0.7rem; border-radius: var(--radius-pill);
       background: rgba(255,255,255,0.04); border: 1px solid var(--border);
       font-size: 0.74rem; font-weight: 600; color: var(--muted);
     }
-    .version-tag::before {
+    .release__chip::before {
       content: ""; width: 7px; height: 7px; border-radius: 50%;
       background: var(--card-accent);
     }
 
-    .version-open {
-      margin-top: auto; padding-top: 0.35rem;
+    .release__open {
+      margin-top: auto; padding-top: 0.4rem;
       display: inline-flex; align-items: center; gap: 0.4rem;
-      font-size: 0.9rem; font-weight: 700;
+      font-size: 0.92rem; font-weight: 700;
       color: var(--card-accent);
     }
-    .version-open span { transition: transform 0.18s ease; }
-    .version-card:hover .version-open span { transform: translateX(4px); }
+    .release__open span { transition: transform 0.18s var(--ease); }
+    .release:hover .release__open span,
+    .release:focus-visible .release__open span { transform: translateX(4px); }
+
+    .release__scene {
+      position: relative;
+      display: grid; place-items: center;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 76% 26%, color-mix(in srgb, var(--card-accent) 26%, transparent), transparent 64%),
+        linear-gradient(135deg, #0f1f36 0%, #09131f 100%);
+    }
+    .release__scene::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+    .release__scene::after {
+      content: ""; position: absolute; left: 12%; right: 12%; bottom: 18%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent,
+        color-mix(in srgb, var(--card-accent) 52%, transparent), transparent);
+    }
+    .release__icon {
+      position: relative; z-index: 1;
+      display: grid; place-items: center;
+      border-radius: var(--radius-sm);
+      color: var(--card-accent);
+      background: color-mix(in srgb, var(--card-accent) 20%, transparent);
+      border: 1px solid color-mix(in srgb, var(--card-accent) 44%, transparent);
+    }
+
+    /* ── The latest release: wider, not louder. Same shadow, same border
+          weight, same type scale as the three below it. ── */
+    .release--latest {
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+      align-items: center;
+      gap: clamp(1rem, 3vw, 2rem);
+      padding: clamp(1.25rem, 3vw, 1.9rem);
+      margin-bottom: 18px;
+    }
+    /* A 16/9 scene here forced the row ~100px taller than its own text
+       column, leaving the card looking half-empty. */
+    .release--latest .release__scene { aspect-ratio: 2.4 / 1; min-height: 148px; }
+    .release--latest .release__icon { width: 4rem; height: 4rem; font-size: 2rem; }
+
+    /* ── The three archived releases ── */
+    .release-grid {
+      display: grid; gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      align-items: stretch;
+    }
+    .release-grid .release { grid-template-rows: auto 1fr; }
+    .release-grid .release__scene { order: -1; aspect-ratio: 16 / 9; min-height: 116px; }
+    .release-grid .release__icon { width: 3.1rem; height: 3.1rem; font-size: 1.5rem; }
 
     /* ══════════════════════════════════════════════════════════════
-       RELEASE TIMELINE
+       RELEASE TIMELINE — deliberately flat. These are archived releases
+       in date order, not a ranked ladder, so no rising line and no
+       directional animation.
     ══════════════════════════════════════════════════════════════ */
-    .roadmap-section { padding: 1.5rem 0 3rem; }
+    .roadmap-section { padding: clamp(1.5rem, 4vw, 2.5rem) 0 1rem; }
     .roadmap { padding: 2rem 1.75rem 1.75rem; }
 
     .roadmap__track {
@@ -369,9 +405,26 @@
     .roadmap-desc { margin-top: 3px; font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
 
     /* ══════════════════════════════════════════════════════════════
+       CLOSING FACTS BAND
+    ══════════════════════════════════════════════════════════════ */
+    .facts-section { padding: clamp(1.25rem, 3vw, 2rem) 0 0.5rem; }
+    .meta-strip {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 12px;
+    }
+    .meta-strip .stat {
+      padding: 1rem 1.1rem; border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--muted); line-height: 1.35;
+    }
+    .meta-strip .stat strong {
+      display: block; color: var(--text); font-size: 0.96rem; margin-bottom: 3px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
        FOOTER
     ══════════════════════════════════════════════════════════════ */
-    .site-footer { padding: 0 0 3rem; }
+    .site-footer { padding: 2rem 0 3rem; }
     .site-footer p {
       margin: 0; padding-top: 1.25rem;
       border-top: 1px solid var(--border);
@@ -386,100 +439,145 @@
     }
 
     /* ══════════════════════════════════════════════════════════════
-       RESPONSIVE
+       MOTION
+       The hidden state lives only inside each keyframe's `from`, never in a
+       base rule, so nothing can end up permanently invisible.
     ══════════════════════════════════════════════════════════════ */
-    @media (max-width: 880px) {
-      .hero-wrap { grid-template-columns: 1fr; }
-      .hero-copy { padding: 1.9rem; }
-      .stage { min-height: 400px; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(0.78); }
+    }
+    @keyframes drift-a {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50%      { transform: translate3d(46px, 30px, 0); }
+    }
+    @keyframes drift-b {
+      0%, 100% { transform: translate3d(0, 0, 0); }
+      50%      { transform: translate3d(-40px, 36px, 0); }
     }
 
-    @media (max-width: 720px) {
-      .versions-grid { grid-template-columns: 1fr; }
+    .hero__inner > * { animation: rise 0.75s var(--ease) both; }
+    .hero__inner > *:nth-child(1) { animation-delay: 0.04s; }
+    .hero__inner > *:nth-child(2) { animation-delay: 0.10s; }
+    .hero__inner > *:nth-child(3) { animation-delay: 0.16s; }
+    .hero__inner > *:nth-child(4) { animation-delay: 0.22s; }
+    .hero__inner > *:nth-child(5) { animation-delay: 0.28s; }
+    .hero__inner > *:nth-child(6) { animation-delay: 0.34s; }
+
+    .release { animation: rise 0.75s var(--ease) both; }
+    .release--latest { animation-delay: 0.30s; }
+    .release-grid .release:nth-child(1) { animation-delay: 0.38s; }
+    .release-grid .release:nth-child(2) { animation-delay: 0.46s; }
+    .release-grid .release:nth-child(3) { animation-delay: 0.54s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        /* The negative delay matters: the staggered entrances hold their
+           hidden `from` state for the length of their delay, so without this
+           a reduced-motion visitor would wait out the full stagger staring at
+           invisible content. */
+        animation-delay: -1ms !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════════════════ */
+    @media (max-width: 760px) {
+      .release--latest { grid-template-columns: 1fr; }
+      .release--latest .release__scene { order: -1; aspect-ratio: 3.4 / 1; min-height: 130px; }
+      .release--latest .release__icon { width: 3.6rem; height: 3.6rem; font-size: 1.8rem; }
     }
 
     @media (max-width: 640px) {
-      .meta-strip { grid-template-columns: 1fr 1fr; }
+      .meta-strip { grid-template-columns: 1fr; }
       .roadmap__track { grid-template-columns: 1fr; gap: 1.4rem; }
       .roadmap__track::before { display: none; }
       .roadmap-node { flex-direction: row; align-items: center; text-align: left; gap: 0.9rem; padding: 0; }
       .roadmap-dot { margin-bottom: 0; }
       .roadmap { padding: 1.6rem 1.4rem; }
     }
-
-    @media (max-width: 520px) {
-      .hero { padding: 2.25rem 0 1.5rem; }
-      .hero-visual { padding: 18px; }
-      .stage { min-height: 470px; }
-      .ring { width: 112px; top: 14px; right: 14px; }
-      .ring__value { font-size: 1.6rem; }
-      .stage__pills { left: 16px; right: 16px; top: 152px; }
-      .book { left: 16px; right: 16px; height: 132px; }
-      .book__page { height: 84px; }
-      .book__spine { height: 92px; }
-    }
-
-    @media (max-width: 420px) {
-      .meta-strip { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
+
+  <svg class="svg-sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-cap" viewBox="0 0 24 24">
+        <path d="M12 4 22 8.5 12 13 2 8.5Z" />
+        <path d="M6.5 10.4v5c0 1.7 2.5 3.1 5.5 3.1s5.5-1.4 5.5-3.1v-5" />
+        <path d="M19.6 9.8v4.3" />
+      </symbol>
+      <symbol id="i-flask" viewBox="0 0 24 24">
+        <path d="M9.5 3v6.1L4.6 17.5A1.7 1.7 0 0 0 6.1 20h11.8a1.7 1.7 0 0 0 1.5-2.5L14.5 9.1V3" />
+        <path d="M8 3h8" />
+        <path d="M7.2 14.6h9.6" />
+      </symbol>
+      <symbol id="i-sigma" viewBox="0 0 24 24">
+        <path d="M16.5 5.5h-9l5 6.5-5 6.5h9" />
+      </symbol>
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path d="M12 7.2C10.1 5.5 7.5 4.8 4.5 4.8v12.4c3 0 5.6.7 7.5 2.4" />
+        <path d="M12 7.2c1.9-1.7 4.5-2.4 7.5-2.4v12.4c-3 0-5.6.7-7.5 2.4" />
+        <path d="M12 7.2v12.4" />
+      </symbol>
+    </defs>
+  </svg>
+
   <main>
 
     <!-- ══════════════════════════════════════════════════════════
          HERO
     ══════════════════════════════════════════════════════════ -->
     <section class="hero">
-      <div class="container">
+      <div class="hero__aura" aria-hidden="true">
+        <div class="hero__dots"></div>
+      </div>
 
-        <div class="hero-wrap">
+      <div class="container hero__inner">
 
-          <div class="hero-copy panel-surface">
-            <div class="brand">
-              <div class="brand-mark" aria-hidden="true">🎓</div>
-              <span class="brand-word">Learning Center</span>
-            </div>
-            <h1>Documentation Versions</h1>
-            <p class="lead">
-              Browse the available published versions of this project. Select a version below to open its documentation.
-            </p>
-          </div>
-
-          <div class="hero-visual panel-surface" aria-hidden="true">
-            <div class="stage">
-              <div class="stage__grid"></div>
-
-              <span class="stage__chip">Grades 3&ndash;12 &middot; Static HTML</span>
-
-              <div class="ring">
-                <div class="ring__inner">
-                  <span class="ring__value">4</span>
-                  <span class="ring__label">Published Versions</span>
-                </div>
-              </div>
-
-              <div class="stage__pills">
-                <span class="stage-pill stage-pill--latest">v0.3.1</span>
-                <span class="stage-pill">v0.2.5</span>
-                <span class="stage-pill">v0.1.4</span>
-                <span class="stage-pill">v0.0.1</span>
-              </div>
-
-              <div class="book">
-                <div class="book__page book__page--left"></div>
-                <div class="book__page book__page--right"></div>
-                <div class="book__spine"></div>
-              </div>
-            </div>
-          </div>
-
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-cap" /></svg>
+          </span>
+          <span class="brand-word">Learning Center</span>
         </div>
 
-        <div class="meta-strip" aria-hidden="true">
-          <div class="stat"><strong>4</strong>Published versions</div>
-          <div class="stat"><strong>Grades 3&ndash;12</strong>Content focus</div>
-          <div class="stat"><strong>Static HTML</strong>No build step</div>
+        <div><span class="eyebrow">Grades 3&ndash;12 &middot; Static HTML</span></div>
+
+        <h1>Documentation Versions</h1>
+
+        <p class="lead">
+          Browse the available published versions of this project. Select a version below to open its documentation.
+        </p>
+
+        <div class="ring" aria-hidden="true">
+          <div class="ring__glow"></div>
+          <div class="ring__spin"></div>
+          <div class="ring__core">
+            <div>
+              <span class="ring__value">4</span>
+              <span class="ring__label">Published Versions</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="version-pills" aria-hidden="true">
+          <span class="vpill vpill--latest">v0.3.1</span>
+          <span class="vpill">v0.2.5</span>
+          <span class="vpill">v0.1.4</span>
+          <span class="vpill">v0.0.1</span>
         </div>
 
       </div>
@@ -495,59 +593,68 @@
           <h2>Published Versions</h2>
         </div>
 
-        <div class="versions-grid">
-
-          <a class="version-card version-card--v3 panel-surface" href="./v0.3.1/">
-            <div class="version-card__top">
-              <span class="version-badge">v0.3.1</span>
-              <div class="version-scene">
-                <span class="version-scene__glyph" aria-hidden="true">🎓</span>
-              </div>
+        <a class="release release--latest release--v3 panel-surface" href="./v0.3.1/">
+          <div class="release__main">
+            <div class="release__head">
+              <span class="release__badge">v0.3.1</span>
+              <span class="release__dot" aria-hidden="true"></span>
             </div>
-            <div class="version-card__body">
-              <span class="version-desc">Latest available version</span>
-              <span class="version-tag">Booking modal included</span>
-              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+            <p class="release__desc">Latest available version</p>
+            <span class="release__chip">Booking modal included</span>
+            <span class="release__open">Open <span aria-hidden="true">&rarr;</span></span>
+          </div>
+          <div class="release__scene" aria-hidden="true">
+            <span class="release__icon">
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-cap" /></svg>
+            </span>
+          </div>
+        </a>
+
+        <div class="release-grid">
+
+          <a class="release release--v2 panel-surface" href="./v0.2.5/">
+            <div class="release__scene" aria-hidden="true">
+              <span class="release__icon">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-flask" /></svg>
+              </span>
+            </div>
+            <div class="release__main">
+              <div class="release__head">
+                <span class="release__badge">v0.2.5</span>
+              </div>
+              <p class="release__desc">Previous stable release</p>
+              <span class="release__chip">Booking modal included</span>
+              <span class="release__open">Open <span aria-hidden="true">&rarr;</span></span>
             </div>
           </a>
 
-          <a class="version-card version-card--v2 panel-surface" href="./v0.2.5/">
-            <div class="version-card__top">
-              <span class="version-badge">v0.2.5</span>
-              <div class="version-scene">
-                <span class="version-scene__glyph" aria-hidden="true">⚗️</span>
-              </div>
+          <a class="release release--v1 panel-surface" href="./v0.1.4/">
+            <div class="release__scene" aria-hidden="true">
+              <span class="release__icon">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sigma" /></svg>
+              </span>
             </div>
-            <div class="version-card__body">
-              <span class="version-desc">Previous stable release</span>
-              <span class="version-tag">Booking modal included</span>
-              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+            <div class="release__main">
+              <div class="release__head">
+                <span class="release__badge">v0.1.4</span>
+              </div>
+              <p class="release__desc">Previous stable release</p>
+              <span class="release__open">Open <span aria-hidden="true">&rarr;</span></span>
             </div>
           </a>
 
-          <a class="version-card version-card--v1 panel-surface" href="./v0.1.4/">
-            <div class="version-card__top">
-              <span class="version-badge">v0.1.4</span>
-              <div class="version-scene">
-                <span class="version-scene__glyph" aria-hidden="true">∑</span>
+          <a class="release release--v0 panel-surface" href="./v0.0.1/">
+            <div class="release__scene" aria-hidden="true">
+              <span class="release__icon">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-book" /></svg>
+              </span>
+            </div>
+            <div class="release__main">
+              <div class="release__head">
+                <span class="release__badge">v0.0.1</span>
               </div>
-            </div>
-            <div class="version-card__body">
-              <span class="version-desc">Previous stable release</span>
-              <span class="version-open">Open <span aria-hidden="true">→</span></span>
-            </div>
-          </a>
-
-          <a class="version-card version-card--v0 panel-surface" href="./v0.0.1/">
-            <div class="version-card__top">
-              <span class="version-badge">v0.0.1</span>
-              <div class="version-scene">
-                <span class="version-scene__glyph" aria-hidden="true">📖</span>
-              </div>
-            </div>
-            <div class="version-card__body">
-              <span class="version-desc">Initial published version</span>
-              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+              <p class="release__desc">Initial published version</p>
+              <span class="release__open">Open <span aria-hidden="true">&rarr;</span></span>
             </div>
           </a>
 
@@ -603,6 +710,19 @@
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         CLOSING FACTS
+    ══════════════════════════════════════════════════════════ -->
+    <section class="facts-section">
+      <div class="container">
+        <div class="meta-strip" aria-hidden="true">
+          <div class="stat"><strong>4</strong>Published versions</div>
+          <div class="stat"><strong>Grades 3&ndash;12</strong>Content focus</div>
+          <div class="stat"><strong>Static HTML</strong>No build step</div>
+        </div>
       </div>
     </section>
 
