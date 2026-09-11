@@ -3,11 +3,19 @@
 ## Current State
 
 Static HTML/CSS STEM learning center site (grades 3–12), served from `docs/` via GitHub Pages.
-Site content was dormant since 2026-04-08 (previous latest published version:
-`docs/v0.2.5/index.html`) until this push, which adds a new published version and redesigns the
-site root. Final pushed commit `d82ecc087a83a8a77f0c0674805dca7b537fd20d`, tagged `v0.3.1` (tag
-pushed: yes; remote tag verified: yes). Snapshot created and verified at
-`/Users/ant/WorkSync/Projects/RepoBackups/Summit-Learning-Center/v0.3.1/`.
+Site content dormant since 2026-04-08; `docs/index.html` (the live site root, a version picker —
+not site content itself) has since seen three rounds of visual work this session: the v0.3.1
+redesign, an IA re-architecture (`c5e999d`), and a whole-page educational icon background
+(`3976428`) — see Working below for detail on the latter two. This session's closeout will tag the
+current HEAD `v0.3.2` and create a snapshot from that exact commit (both pending as of this write —
+see the session-closeout entry below for confirmed final values once applied).
+
+Prior confirmed release: final pushed commit `d82ecc087a83a8a77f0c0674805dca7b537fd20d`, tagged
+`v0.3.1` (tag pushed: yes; remote tag verified: yes). Snapshot created and verified at
+`/Users/ant/WorkSync/Projects/RepoBackups/Summit-Learning-Center/v0.3.1/` (on the machine that
+built it — Anthony's MacBook Pro; this Windows machine, DESKTOP-8JF1MKA, had no configured snapshot
+destination until this session, now resolved to
+`E:\WorkSync\Projects\RepoBackups\Summit-Learning-Center\`).
 
 ## Last Updated
 
@@ -120,4 +128,9 @@ URL (`https://rmz9dkfy5f-pixel.github.io/Summit-Learning-Center/`, `HTTP 200`).
 
 ## Next Actions
 
+- **User-confirmed next task (2026-09-11 session-end closeout):** cross-browser visual check of the
+  redesigned `docs/index.html` (re-architecture + icon background) in Firefox and Safari — only
+  Chromium has been observed so far.
 - Decide and record the release-readiness facts above, or explicitly accept deferring them.
+- Consider adding subtle motion to the background icon field if it still feels too static once
+  lived with — a deliberate scope choice this session, not an oversight (see `DECISION_LOG.md`).

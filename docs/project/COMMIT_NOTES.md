@@ -1,5 +1,40 @@
 # Commit Notes
 
+## 2026-09-11 (third session) — `docs/index.html` re-architecture + background icon field (will be tagged `v0.3.2`, applied in this session's closeout)
+
+## Summary
+
+- Re-architect `docs/index.html`'s IA (full-bleed hero, promoted latest release, inline SVG icons,
+  CSS-only motion) — commit `c5e999d` — then add a whole-page educational icon background field —
+  commit `3976428`.
+
+## Description
+
+- What changed: `c5e999d` replaced the two-column hero and its fragile absolutely-positioned
+  decorative stage with a full-bleed centered layout, promoted the latest release to a full-width
+  row above a 3-up archived-release grid, replaced all emoji with inline SVG (`<symbol>` sprite),
+  and added staggered/rotating/breathing CSS motion behind a `prefers-reduced-motion` guard — fixing
+  a pre-existing `outline:none` accessibility regression along the way. `3976428` added a decorative
+  whole-page background field of 9 education-themed inline SVG icons (~19 instances: cap, flask,
+  sigma, book, pencil, apple, diploma/scroll, atom, ruler) across every section, stroke-only at
+  0.10–0.18 opacity, painting behind all foreground content. Both commits: zero user-visible copy
+  change (49 strings verified byte-identical throughout), no JavaScript, no external references.
+- Why: user requested the visuals be "enhanced considerably" after seeing the shipped v0.3.1
+  picker, then separately asked for the background to feel less "plain and bland" with educational
+  imagery — both refined through direct back-and-forth on IA ambition, icon style, motion, and
+  copy-change scope.
+- Validation: real-browser (headless Edge) passes at 1600/1100/900/760/520/400/360px for both
+  commits — the 400/360px widths via a same-origin `<iframe>` harness with direct
+  `document.documentElement.scrollWidth` measurement, since Windows clamps headless browser windows
+  narrower than ~400px. String-parity check (49/49 unchanged), HTML tag-balance, zero
+  `<script>`/external-reference check, and `python3 -m http.server` + `curl` HTTP 200 checks on all
+  4 version links, for both commits. Both were also verified live in production after deploy
+  (byte-for-byte match between the committed blob and the deployed page).
+- Risks / follow-up: only Chromium has been observed — no Firefox/Safari visual check yet (recorded
+  as this closeout's confirmed next task). `validate --release` remains BLOCKED on pre-existing,
+  unrelated release-readiness facts (`public_exposure`, `data_sensitivity`, `risk_level`, privacy
+  classification).
+
 ## 2026-09-11 — Landing-page visual redesign (will be tagged `v0.3.1`)
 
 ## Summary

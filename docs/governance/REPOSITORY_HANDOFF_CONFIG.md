@@ -62,6 +62,7 @@ scutil --get ComputerName 2>/dev/null || hostname
 | Machine | Detection | Snapshot destination | Notes |
 |---|---|---|---|
 | Anthony's MacBook Pro | `scutil --get ComputerName` → `Anthony's MacBook Pro` | `/Users/ant/WorkSync/Projects/RepoBackups/Summit-Learning-Center/` | Confirmed by user 2026-09-10. Note: `/Users/ant/WorkSync/Projects/RepoBackups/Summit Learning Center/` (space, not hyphen) already exists as a stale, unrelated artifact — frozen at the repo's very first commit, predates the `docs/` restructuring, has its own uncommitted local edits. Do not use it; do not merge into it. |
+| DESKTOP-8JF1MKA (Windows) | `hostname` → `DESKTOP-8JF1MKA` | `E:\WorkSync\Projects\RepoBackups\Summit-Learning-Center\` | Confirmed by user 2026-09-11 (session-end closeout tagging `v0.3.2`) — matches this machine's established RepoBackups convention already used for other projects. |
 
 If the current machine does not match any row above, or more than one row could plausibly match,
 stop and ask before picking a destination — do not guess or infer a path pattern.
