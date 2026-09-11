@@ -6,15 +6,23 @@
   <title>Project Documentation Versions</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --card: #1f2937;
-      --card-hover: #273449;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --accent: #60a5fa;
-      --border: rgba(255,255,255,0.08);
-      --shadow: 0 20px 40px rgba(0,0,0,0.28);
+      --bg-top: #06101c;
+      --bg-mid: #081425;
+      --bg-bottom: #07111f;
+      --panel-top: rgba(16,31,53,0.9);
+      --panel-bottom: rgba(9,18,33,0.94);
+      --text: #f3f7fb;
+      --muted: #a8c0d8;
+      --accent-blue: #2f7bff;
+      --accent-blue-light: #64a2ff;
+      --accent-blue-dark: #1f5fd1;
+      --accent-orange: #ff7b1b;
+      --accent-orange-light: #ffb16b;
+      --accent-orange-dark: #e36404;
+      --border: rgba(255,255,255,0.10);
+      --shadow: 0 24px 60px rgba(0,0,0,0.34);
+      --radius-lg: 28px;
+      --radius-pill: 999px;
     }
 
     * { box-sizing: border-box; }
@@ -24,152 +32,588 @@
       min-height: 100vh;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background:
-        radial-gradient(circle at top, rgba(96,165,250,0.14), transparent 30%),
-        linear-gradient(180deg, #0b1120 0%, var(--bg) 100%);
+        radial-gradient(circle at 14% 0%, rgba(47,123,255,0.18), transparent 32%),
+        radial-gradient(circle at 100% 6%, rgba(255,123,27,0.16), transparent 34%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 40%, var(--bg-bottom) 100%);
       color: var(--text);
-      display: grid;
-      place-items: center;
-      padding: 32px 20px;
+      line-height: 1.6;
     }
 
-    .wrap {
+    .container {
       width: 100%;
-      max-width: 860px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
     }
 
-    .panel {
-      background: rgba(17, 24, 39, 0.82);
-      backdrop-filter: blur(10px);
+    /* Shared panel surface — applied to many elements across the page,
+       rather than one box wrapping everything. */
+    .panel-surface {
+      background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 32px;
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow);
     }
 
+    /* ══════════════════════════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════════════════════════ */
+    .hero { padding: 3.25rem 0 2rem; }
+
+    .hero-wrap {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .hero-copy { padding: 2.25rem; display: flex; flex-direction: column; justify-content: center; }
+
+    .brand {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 22px;
+    }
+    .brand-mark {
+      width: 42px; height: 42px; border-radius: 13px;
+      display: grid; place-items: center; font-size: 1.15rem;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-orange));
+      box-shadow: 0 10px 22px rgba(47,123,255,0.28);
+    }
+    .brand-word { font-weight: 800; letter-spacing: 0.01em; font-size: 1.02rem; color: var(--text); }
+
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      line-height: 1.1;
-      letter-spacing: -0.03em;
+      margin: 0 0 10px;
+      font-size: clamp(2.1rem, 4.4vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      color: var(--text);
     }
 
     p.lead {
-      margin: 0 0 28px;
+      margin: 0;
       color: var(--muted);
       font-size: 1.05rem;
       line-height: 1.6;
-      max-width: 60ch;
+      max-width: 52ch;
     }
 
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
+    /* ── Hero visual: education-themed decorative stage ─────────── */
+    .hero-visual { padding: 24px; overflow: hidden; }
 
-    .card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 18px 20px;
-      border-radius: 18px;
-      background: var(--card);
+    .stage {
+      position: relative;
+      min-height: 420px; height: 100%;
+      border-radius: 24px; overflow: hidden;
       border: 1px solid var(--border);
-      color: inherit;
-      text-decoration: none;
-      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      background: linear-gradient(135deg, #11243c 0%, #0a1524 100%);
+    }
+    .stage__grid {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .stage__chip {
+      position: absolute; top: 18px; left: 18px; z-index: 2;
+      padding: 0.4rem 0.8rem; border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--muted);
     }
 
-    .card:hover,
-    .card:focus-visible {
-      background: var(--card-hover);
-      border-color: rgba(96,165,250,0.5);
-      transform: translateY(-2px);
+    /* Donut ring: four equal quarters, one per published version. */
+    .ring {
+      position: absolute; top: 16px; right: 18px; z-index: 2;
+      width: 132px; aspect-ratio: 1; border-radius: 50%;
+      display: grid; place-items: center;
+      background:
+        radial-gradient(circle, #0b1a2c 56%, transparent 57%),
+        conic-gradient(
+          var(--accent-blue-dark) 0deg 90deg,
+          var(--accent-blue) 90deg 180deg,
+          var(--accent-blue-light) 180deg 270deg,
+          var(--accent-orange) 270deg 360deg
+        );
+      box-shadow: inset 0 0 0 10px rgba(255,255,255,0.03);
+    }
+    .ring__inner { width: 84px; text-align: center; }
+    .ring__value { display: block; font-size: 1.9rem; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
+    .ring__label {
+      display: block; margin-top: 5px;
+      font-size: 0.58rem; line-height: 1.15; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+
+    .stage__pills {
+      position: absolute; left: 20px; right: 168px; top: 96px; z-index: 1;
+      display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px;
+    }
+    .stage-pill {
+      padding: 9px 10px; border-radius: 14px;
+      border: 1px solid var(--border); background: rgba(255,255,255,0.04);
+      font-size: 0.76rem; font-weight: 700; color: var(--muted);
+      text-align: center; white-space: nowrap;
+    }
+    .stage-pill--latest {
+      background: rgba(255,123,27,0.12);
+      border-color: rgba(255,123,27,0.34);
+      color: var(--accent-orange-light);
+    }
+
+    /* Open-book centerpiece, built from CSS shapes only. */
+    .book {
+      position: absolute; left: 24px; right: 24px; bottom: 24px;
+      height: 152px; z-index: 1;
+    }
+    .book::after {
+      content: ""; position: absolute;
+      left: 14%; right: 14%; bottom: 4px; height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%);
+    }
+    .book__page {
+      position: absolute; bottom: 22px; width: 45%; height: 96px;
+      border: 2px solid rgba(255,255,255,0.14);
+      box-shadow: 0 14px 26px rgba(0,0,0,0.32);
+    }
+    .book__page::before {
+      content: ""; position: absolute; inset: 13px 12px;
+      background: repeating-linear-gradient(180deg,
+        rgba(255,255,255,0.20) 0 2px, transparent 2px 13px);
+      opacity: 0.55;
+    }
+    .book__page--left {
+      left: 3%;
+      transform: skewY(-7deg);
+      border-radius: 12px 4px 4px 14px;
+      background: linear-gradient(180deg, rgba(47,123,255,0.34), rgba(11,26,44,0.72));
+      border-color: rgba(100,162,255,0.38);
+    }
+    .book__page--right {
+      right: 3%;
+      transform: skewY(7deg);
+      border-radius: 4px 12px 14px 4px;
+      background: linear-gradient(180deg, rgba(255,123,27,0.28), rgba(11,26,44,0.72));
+      border-color: rgba(255,177,107,0.34);
+    }
+    .book__spine {
+      position: absolute; left: 50%; bottom: 20px;
+      width: 4px; height: 104px; transform: translateX(-50%);
+      border-radius: 2px;
+      background: linear-gradient(180deg, var(--accent-blue-light), rgba(255,255,255,0.06));
+      box-shadow: 0 0 18px rgba(100,162,255,0.35);
+    }
+
+    /* ── Factual meta strip (true, derived facts only) ──────────── */
+    .meta-strip {
+      display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px; margin: 1.25rem 0 0; max-width: 620px;
+    }
+    .meta-strip .stat {
+      padding: 0.8rem 0.9rem; border-radius: 18px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--muted); line-height: 1.3;
+    }
+    .meta-strip .stat strong {
+      display: block; color: var(--text); font-size: 0.92rem; margin-bottom: 2px;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       SECTION HEADINGS
+    ══════════════════════════════════════════════════════════════ */
+    .section-head { margin-bottom: 1.15rem; }
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+      color: var(--text);
+    }
+
+    /* ══════════════════════════════════════════════════════════════
+       VERSIONS GRID
+    ══════════════════════════════════════════════════════════════ */
+    .versions-section { padding: 1.5rem 0 2rem; }
+
+    .versions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px;
+    }
+
+    .version-card {
+      --card-accent: var(--accent-blue);
+      display: flex; flex-direction: column;
+      color: inherit; text-decoration: none;
+      overflow: hidden;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .version-card--v0 { --card-accent: var(--accent-blue-dark); }
+    .version-card--v1 { --card-accent: var(--accent-blue); }
+    .version-card--v2 { --card-accent: var(--accent-blue-light); }
+    .version-card--v3 { --card-accent: var(--accent-orange); }
+
+    .version-card:hover,
+    .version-card:focus-visible {
+      transform: translateY(-3px);
+      border-color: color-mix(in srgb, var(--card-accent) 55%, transparent);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.42);
       outline: none;
     }
 
-    .version-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    .version-card__top { position: relative; padding: 16px 16px 0; }
+
+    .version-badge {
+      position: absolute; top: 12px; left: 18px; z-index: 2;
+      padding: 0.45rem 0.95rem; border-radius: var(--radius-pill);
+      font-size: 1rem; font-weight: 800; letter-spacing: -0.01em;
+      color: var(--text);
+      background: color-mix(in srgb, var(--card-accent) 30%, rgba(9,18,33,0.92));
+      border: 1px solid color-mix(in srgb, var(--card-accent) 58%, transparent);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.38);
     }
 
-    .version {
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .version-scene {
+      position: relative; margin-top: 44px; min-height: 134px;
+      border-radius: 22px; overflow: hidden;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 80% 24%, color-mix(in srgb, var(--card-accent) 26%, transparent), transparent 62%),
+        linear-gradient(135deg, #0f1f36 0%, #09131f 100%);
+    }
+    .version-scene::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+    /* Floor line, echoing the hero stage's sense of a surface. */
+    .version-scene::after {
+      content: ""; position: absolute; left: 10%; right: 10%; bottom: 26px;
+      height: 1px; background: linear-gradient(90deg, transparent,
+        color-mix(in srgb, var(--card-accent) 50%, transparent), transparent);
+    }
+    .version-scene__glyph {
+      position: absolute; right: 16px; bottom: -10px;
+      font-size: 4.6rem; line-height: 1;
+      opacity: 0.26; transform: rotate(-8deg);
     }
 
-    .meta {
-      color: var(--muted);
-      font-size: 0.95rem;
+    .version-card__body {
+      padding: 15px 18px 18px;
+      display: flex; flex-direction: column; gap: 0.6rem; flex: 1;
+    }
+    .version-desc { color: var(--muted); font-size: 0.95rem; }
+
+    .version-tag {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      width: fit-content;
+      padding: 0.25rem 0.7rem; border-radius: var(--radius-pill);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      font-size: 0.74rem; font-weight: 600; color: var(--muted);
+    }
+    .version-tag::before {
+      content: ""; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--card-accent);
     }
 
-    .arrow {
-      color: var(--accent);
-      font-size: 1.5rem;
-      line-height: 1;
-      flex-shrink: 0;
+    .version-open {
+      margin-top: auto; padding-top: 0.35rem;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.9rem; font-weight: 700;
+      color: var(--card-accent);
+    }
+    .version-open span { transition: transform 0.18s ease; }
+    .version-card:hover .version-open span { transform: translateX(4px); }
+
+    /* ══════════════════════════════════════════════════════════════
+       RELEASE TIMELINE
+    ══════════════════════════════════════════════════════════════ */
+    .roadmap-section { padding: 1.5rem 0 3rem; }
+    .roadmap { padding: 2rem 1.75rem 1.75rem; }
+
+    .roadmap__track {
+      position: relative;
+      display: grid; grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 0;
+    }
+    .roadmap__track::before {
+      content: ""; position: absolute;
+      top: 10px; left: 12.5%; width: 75%; height: 3px;
+      border-radius: 2px; z-index: 0;
+      background: linear-gradient(90deg,
+        var(--accent-blue-dark) 0%, var(--accent-blue) 35%,
+        var(--accent-blue-light) 68%, var(--accent-orange) 100%);
     }
 
-    .footer {
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: 0.92rem;
+    .roadmap-node {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 0 0.6rem;
+    }
+    .roadmap-dot {
+      width: 22px; height: 22px; border-radius: 50%;
+      margin-bottom: 1.15rem; position: relative; flex-shrink: 0;
+      background: var(--node-color, var(--accent-blue));
+      box-shadow: 0 0 0 6px rgba(255,255,255,0.04);
+    }
+    .roadmap-dot::before {
+      content: ""; position: absolute; inset: -5px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.22);
+    }
+    .roadmap-node--1 .roadmap-dot { --node-color: var(--accent-blue-dark); }
+    .roadmap-node--2 .roadmap-dot { --node-color: var(--accent-blue); }
+    .roadmap-node--3 .roadmap-dot { --node-color: var(--accent-blue-light); }
+    .roadmap-node--4 .roadmap-dot { --node-color: var(--accent-orange); }
+
+    .roadmap-version { font-weight: 800; font-size: 0.98rem; letter-spacing: -0.01em; }
+    .roadmap-desc { margin-top: 3px; font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+
+    /* ══════════════════════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════════════════════ */
+    .site-footer { padding: 0 0 3rem; }
+    .site-footer p {
+      margin: 0; padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted); font-size: 0.92rem;
     }
 
     code {
       background: rgba(255,255,255,0.08);
       padding: 0.15em 0.45em;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 0.95em;
     }
 
+    /* ══════════════════════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════════════════════ */
+    @media (max-width: 880px) {
+      .hero-wrap { grid-template-columns: 1fr; }
+      .hero-copy { padding: 1.9rem; }
+      .stage { min-height: 400px; }
+    }
+
+    @media (max-width: 720px) {
+      .versions-grid { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 640px) {
-      .panel { padding: 24px; }
-      .card { padding: 16px; }
-      .version { font-size: 1.05rem; }
+      .meta-strip { grid-template-columns: 1fr 1fr; }
+      .roadmap__track { grid-template-columns: 1fr; gap: 1.4rem; }
+      .roadmap__track::before { display: none; }
+      .roadmap-node { flex-direction: row; align-items: center; text-align: left; gap: 0.9rem; padding: 0; }
+      .roadmap-dot { margin-bottom: 0; }
+      .roadmap { padding: 1.6rem 1.4rem; }
+    }
+
+    @media (max-width: 520px) {
+      .hero { padding: 2.25rem 0 1.5rem; }
+      .hero-visual { padding: 18px; }
+      .stage { min-height: 470px; }
+      .ring { width: 112px; top: 14px; right: 14px; }
+      .ring__value { font-size: 1.6rem; }
+      .stage__pills { left: 16px; right: 16px; top: 152px; }
+      .book { left: 16px; right: 16px; height: 132px; }
+      .book__page { height: 84px; }
+      .book__spine { height: 92px; }
+    }
+
+    @media (max-width: 420px) {
+      .meta-strip { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="panel">
-      <h1>Documentation Versions</h1>
-      <p class="lead">
-        Browse the available published versions of this project. Select a version below to open its documentation.
-      </p>
+  <main>
 
-      <div class="grid">
-        <a class="card" href="./v0.2.5/">
-          <div class="version-block">
-            <span class="version">v0.2.5</span>
-            <span class="meta">Latest available version</span>
-          </div>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
+    <!-- ══════════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════════ -->
+    <section class="hero">
+      <div class="container">
 
-        <a class="card" href="./v0.1.4/">
-          <div class="version-block">
-            <span class="version">v0.1.4</span>
-            <span class="meta">Previous stable release</span>
-          </div>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
+        <div class="hero-wrap">
 
-        <a class="card" href="./v0.0.1/">
-          <div class="version-block">
-            <span class="version">v0.0.1</span>
-            <span class="meta">Initial published version</span>
+          <div class="hero-copy panel-surface">
+            <div class="brand">
+              <div class="brand-mark" aria-hidden="true">🎓</div>
+              <span class="brand-word">Learning Center</span>
+            </div>
+            <h1>Documentation Versions</h1>
+            <p class="lead">
+              Browse the available published versions of this project. Select a version below to open its documentation.
+            </p>
           </div>
-          <span class="arrow" aria-hidden="true">→</span>
-        </a>
+
+          <div class="hero-visual panel-surface" aria-hidden="true">
+            <div class="stage">
+              <div class="stage__grid"></div>
+
+              <span class="stage__chip">Grades 3&ndash;12 &middot; Static HTML</span>
+
+              <div class="ring">
+                <div class="ring__inner">
+                  <span class="ring__value">4</span>
+                  <span class="ring__label">Published Versions</span>
+                </div>
+              </div>
+
+              <div class="stage__pills">
+                <span class="stage-pill stage-pill--latest">v0.3.1</span>
+                <span class="stage-pill">v0.2.5</span>
+                <span class="stage-pill">v0.1.4</span>
+                <span class="stage-pill">v0.0.1</span>
+              </div>
+
+              <div class="book">
+                <div class="book__page book__page--left"></div>
+                <div class="book__page book__page--right"></div>
+                <div class="book__spine"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="meta-strip" aria-hidden="true">
+          <div class="stat"><strong>4</strong>Published versions</div>
+          <div class="stat"><strong>Grades 3&ndash;12</strong>Content focus</div>
+          <div class="stat"><strong>Static HTML</strong>No build step</div>
+        </div>
+
       </div>
+    </section>
 
-      <p class="footer">
+    <!-- ══════════════════════════════════════════════════════════
+         PUBLISHED VERSIONS
+    ══════════════════════════════════════════════════════════ -->
+    <section class="versions-section">
+      <div class="container">
+
+        <div class="section-head">
+          <h2>Published Versions</h2>
+        </div>
+
+        <div class="versions-grid">
+
+          <a class="version-card version-card--v3 panel-surface" href="./v0.3.1/">
+            <div class="version-card__top">
+              <span class="version-badge">v0.3.1</span>
+              <div class="version-scene">
+                <span class="version-scene__glyph" aria-hidden="true">🎓</span>
+              </div>
+            </div>
+            <div class="version-card__body">
+              <span class="version-desc">Latest available version</span>
+              <span class="version-tag">Booking modal included</span>
+              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+
+          <a class="version-card version-card--v2 panel-surface" href="./v0.2.5/">
+            <div class="version-card__top">
+              <span class="version-badge">v0.2.5</span>
+              <div class="version-scene">
+                <span class="version-scene__glyph" aria-hidden="true">⚗️</span>
+              </div>
+            </div>
+            <div class="version-card__body">
+              <span class="version-desc">Previous stable release</span>
+              <span class="version-tag">Booking modal included</span>
+              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+
+          <a class="version-card version-card--v1 panel-surface" href="./v0.1.4/">
+            <div class="version-card__top">
+              <span class="version-badge">v0.1.4</span>
+              <div class="version-scene">
+                <span class="version-scene__glyph" aria-hidden="true">∑</span>
+              </div>
+            </div>
+            <div class="version-card__body">
+              <span class="version-desc">Previous stable release</span>
+              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+
+          <a class="version-card version-card--v0 panel-surface" href="./v0.0.1/">
+            <div class="version-card__top">
+              <span class="version-badge">v0.0.1</span>
+              <div class="version-scene">
+                <span class="version-scene__glyph" aria-hidden="true">📖</span>
+              </div>
+            </div>
+            <div class="version-card__body">
+              <span class="version-desc">Initial published version</span>
+              <span class="version-open">Open <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════
+         RELEASE TIMELINE
+    ══════════════════════════════════════════════════════════ -->
+    <section class="roadmap-section">
+      <div class="container">
+
+        <div class="section-head">
+          <h2>Release Timeline</h2>
+        </div>
+
+        <div class="roadmap panel-surface">
+          <div class="roadmap__track">
+
+            <div class="roadmap-node roadmap-node--1">
+              <div class="roadmap-dot" aria-hidden="true"></div>
+              <div>
+                <div class="roadmap-version">v0.0.1</div>
+                <div class="roadmap-desc">Initial published version</div>
+              </div>
+            </div>
+
+            <div class="roadmap-node roadmap-node--2">
+              <div class="roadmap-dot" aria-hidden="true"></div>
+              <div>
+                <div class="roadmap-version">v0.1.4</div>
+                <div class="roadmap-desc">Previous stable release</div>
+              </div>
+            </div>
+
+            <div class="roadmap-node roadmap-node--3">
+              <div class="roadmap-dot" aria-hidden="true"></div>
+              <div>
+                <div class="roadmap-version">v0.2.5</div>
+                <div class="roadmap-desc">Previous stable release</div>
+              </div>
+            </div>
+
+            <div class="roadmap-node roadmap-node--4">
+              <div class="roadmap-dot" aria-hidden="true"></div>
+              <div>
+                <div class="roadmap-version">v0.3.1</div>
+                <div class="roadmap-desc">Latest available version</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
         Put this file at <code>docs/index.html</code>. Each version folder should also contain its own <code>index.html</code> so GitHub Pages can open the folder directly.
       </p>
-    </section>
-  </main>
+    </div>
+  </footer>
 </body>
 </html>

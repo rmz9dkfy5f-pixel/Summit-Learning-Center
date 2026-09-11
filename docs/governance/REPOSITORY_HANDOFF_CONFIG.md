@@ -78,8 +78,8 @@ target` otherwise.
   branch" model)
 - Service/container names: N/A — GitHub-managed, no service/container under this project's control
 - Read-only health checks: GitHub Pages build status (repo Settings → Pages); HTTP GET on the
-  published Pages URL once confirmed (URL not yet confirmed — pre-existing open item, see
-  `docs/project/STATUS.md`)
+  published Pages URL — confirmed 2026-09-10: `https://rmz9dkfy5f-pixel.github.io/Summit-Learning-Center/`
+  (`HTTP 200`, `content-length` matches `docs/index.html` byte-for-byte)
 - Log locations: N/A — not accessible; GitHub Pages build logs are the only ones and are
   GitHub-managed
 - Rollback target: `git revert` the offending commit on `main` and push — GitHub Pages serves
