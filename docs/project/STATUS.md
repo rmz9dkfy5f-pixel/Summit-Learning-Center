@@ -6,16 +6,22 @@ Static HTML/CSS STEM learning center site (grades 3–12), served from `docs/` v
 Site content dormant since 2026-04-08; `docs/index.html` (the live site root, a version picker —
 not site content itself) has since seen three rounds of visual work this session: the v0.3.1
 redesign, an IA re-architecture (`c5e999d`), and a whole-page educational icon background
-(`3976428`) — see Working below for detail on the latter two. This session's closeout will tag the
-current HEAD `v0.3.2` and create a snapshot from that exact commit (both pending as of this write —
-see the session-closeout entry below for confirmed final values once applied).
+(`3976428`) — see Working below for detail on the latter two. **Final pushed commit `19c5248`
+(a trailing doc-only continuity sync ahead of the tag), tagged `v0.3.2` (tag pushed: yes; remote tag
+verified: yes via `git ls-remote --tags`).** Snapshot created and verified at
+`E:\WorkSync\Projects\RepoBackups\Summit-Learning-Center\v0.3.2\` on this Windows machine
+(DESKTOP-8JF1MKA) — 223/223 files, file-count match; snapshot's own `git log -1` confirms the exact
+tagged commit.
 
 Prior confirmed release: final pushed commit `d82ecc087a83a8a77f0c0674805dca7b537fd20d`, tagged
 `v0.3.1` (tag pushed: yes; remote tag verified: yes). Snapshot created and verified at
 `/Users/ant/WorkSync/Projects/RepoBackups/Summit-Learning-Center/v0.3.1/` (on the machine that
-built it — Anthony's MacBook Pro; this Windows machine, DESKTOP-8JF1MKA, had no configured snapshot
-destination until this session, now resolved to
-`E:\WorkSync\Projects\RepoBackups\Summit-Learning-Center\`).
+built it — Anthony's MacBook Pro). This Windows machine (DESKTOP-8JF1MKA) had no configured
+snapshot destination until this session — now resolved and recorded in
+`REPOSITORY_HANDOFF_CONFIG.md` as `E:\WorkSync\Projects\RepoBackups\Summit-Learning-Center\`, the
+same Syncthing-shared `WorkSync` path the Mac's own snapshots already sync into (confirmed: the
+existing `v0.3.0`/`v0.3.1` folders there were already present, file-count-matching, before this
+session created `v0.3.2`).
 
 ## Last Updated
 
