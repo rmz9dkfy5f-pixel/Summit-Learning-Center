@@ -44,10 +44,25 @@
     }
 
     .container {
+      position: relative;
+      z-index: 1;
       width: 100%;
       max-width: 1100px;
       margin: 0 auto;
       padding: 0 1.25rem;
+    }
+
+    /* ── Background icon field: a decorative, whole-page education motif.
+       Each section gets its own layer (see the Layering Mechanism note) —
+       positioned-but-unindexed, so it paints below the explicitly z-indexed
+       .container above, exactly like .hero__aura already does. ── */
+    .bg-icons { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .bg-icon { position: absolute; }
+    /* Compound selector so this wins over the later, lower-specificity
+       `.icon { stroke: currentColor }` rule regardless of source order. */
+    .icon.bg-icon {
+      stroke: var(--bg-icon-color, var(--muted));
+      opacity: var(--bg-icon-opacity, 0.14);
     }
 
     /* Shared panel surface — the house recipe, matching the v0.3.1 site. */
@@ -232,7 +247,7 @@
     /* ══════════════════════════════════════════════════════════════
        RELEASES
     ══════════════════════════════════════════════════════════════ */
-    .versions-section { padding: clamp(1.5rem, 4vw, 2.5rem) 0 1rem; }
+    .versions-section { position: relative; padding: clamp(1.5rem, 4vw, 2.5rem) 0 1rem; }
 
     .release {
       --card-accent: var(--accent-blue);
@@ -363,7 +378,7 @@
        in date order, not a ranked ladder, so no rising line and no
        directional animation.
     ══════════════════════════════════════════════════════════════ */
-    .roadmap-section { padding: clamp(1.5rem, 4vw, 2.5rem) 0 1rem; }
+    .roadmap-section { position: relative; padding: clamp(1.5rem, 4vw, 2.5rem) 0 1rem; }
     .roadmap { padding: 2rem 1.75rem 1.75rem; }
 
     .roadmap__track {
@@ -407,7 +422,7 @@
     /* ══════════════════════════════════════════════════════════════
        CLOSING FACTS BAND
     ══════════════════════════════════════════════════════════════ */
-    .facts-section { padding: clamp(1.25rem, 3vw, 2rem) 0 0.5rem; }
+    .facts-section { position: relative; padding: clamp(1.25rem, 3vw, 2rem) 0 0.5rem; }
     .meta-strip {
       display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
       gap: 12px;
@@ -424,7 +439,7 @@
     /* ══════════════════════════════════════════════════════════════
        FOOTER
     ══════════════════════════════════════════════════════════════ */
-    .site-footer { padding: 2rem 0 3rem; }
+    .site-footer { position: relative; padding: 2rem 0 3rem; }
     .site-footer p {
       margin: 0; padding-top: 1.25rem;
       border-top: 1px solid var(--border);
@@ -532,6 +547,32 @@
         <path d="M12 7.2c1.9-1.7 4.5-2.4 7.5-2.4v12.4c-3 0-5.6.7-7.5 2.4" />
         <path d="M12 7.2v12.4" />
       </symbol>
+      <symbol id="i-pencil" viewBox="0 0 24 24">
+        <path d="M4 20 5.2 15.3 16.2 4.3 19.7 7.8 8.7 18.8Z" />
+        <path d="M13.7 6.8 17.2 10.3" />
+      </symbol>
+      <symbol id="i-apple" viewBox="0 0 24 24">
+        <path d="M12 7.5c-1.6-2-4.3-2.1-5.8-.4-2 2.3-1.7 6.4.6 9.4 1.5 2 3 3 4.2 3s2.7-1 4.2-3c2.3-3 2.6-7.1.6-9.4-1.5-1.7-4.2-1.6-5.8.4Z" />
+        <path d="M12 7.5V5.2" />
+        <path d="M12 6c0-1.3 1-2.4 2.3-2.4-.2 1.3-1 2.2-2.3 2.4Z" />
+      </symbol>
+      <symbol id="i-scroll" viewBox="0 0 24 24">
+        <path d="M5 4.5c-1 0-1.8.8-1.8 1.8v11.4c0 1 .8 1.8 1.8 1.8" />
+        <path d="M19 19.5c1 0 1.8-.8 1.8-1.8V6.3c0-1-.8-1.8-1.8-1.8" />
+        <path d="M5 4.5h14v15H5" />
+      </symbol>
+      <symbol id="i-atom" viewBox="0 0 24 24">
+        <ellipse cx="12" cy="12" rx="9" ry="3.6" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)" />
+        <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" />
+      </symbol>
+      <symbol id="i-ruler" viewBox="0 0 24 24">
+        <path d="M3 16.2 16.2 3l4.8 4.8L7.8 21Z" />
+        <path d="M14.3 4.9 16.9 7.5" />
+        <path d="M9.9 9.3 11.8 11.2" />
+        <path d="M5.9 13.3 7.8 15.2" />
+      </symbol>
     </defs>
   </svg>
 
@@ -543,6 +584,12 @@
     <section class="hero">
       <div class="hero__aura" aria-hidden="true">
         <div class="hero__dots"></div>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:5%; left:5%; width:104px; height:104px; transform:rotate(-11deg); --bg-icon-opacity:0.13;"><use href="#i-scroll" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:8%; right:6%; width:84px; height:84px; transform:rotate(18deg); --bg-icon-color:var(--accent-blue-light); --bg-icon-opacity:0.15;"><use href="#i-atom" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:38%; left:3%; width:60px; height:60px; transform:rotate(27deg); --bg-icon-opacity:0.12;"><use href="#i-pencil" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:33%; right:4%; width:92px; height:92px; transform:rotate(-22deg); --bg-icon-color:var(--accent-orange-light); --bg-icon-opacity:0.12;"><use href="#i-ruler" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:6%; left:10%; width:88px; height:88px; transform:rotate(9deg); --bg-icon-color:var(--accent-orange-light); --bg-icon-opacity:0.11;"><use href="#i-apple" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:4%; right:9%; width:100px; height:100px; transform:rotate(-15deg); --bg-icon-color:var(--accent-blue-light); --bg-icon-opacity:0.13;"><use href="#i-cap" /></svg>
       </div>
 
       <div class="container hero__inner">
@@ -587,6 +634,14 @@
          PUBLISHED VERSIONS
     ══════════════════════════════════════════════════════════ -->
     <section class="versions-section">
+      <div class="bg-icons" aria-hidden="true">
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:2%; left:1.5%; width:72px; height:72px; transform:rotate(14deg); --bg-icon-opacity:0.13;"><use href="#i-atom" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:6%; right:2%; width:66px; height:66px; transform:rotate(-19deg); --bg-icon-color:var(--accent-blue-light); --bg-icon-opacity:0.12;"><use href="#i-scroll" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:44%; left:0.5%; width:56px; height:56px; transform:rotate(-8deg); --bg-icon-color:var(--accent-orange-light); --bg-icon-opacity:0.12;"><use href="#i-pencil" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:40%; right:1%; width:78px; height:78px; transform:rotate(12deg); --bg-icon-opacity:0.11;"><use href="#i-book" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:3%; left:4%; width:68px; height:68px; transform:rotate(20deg); --bg-icon-color:var(--accent-orange-light); --bg-icon-opacity:0.12;"><use href="#i-apple" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:2%; right:3%; width:84px; height:84px; transform:rotate(-13deg); --bg-icon-color:var(--accent-blue-light); --bg-icon-opacity:0.13;"><use href="#i-ruler" /></svg>
+      </div>
       <div class="container">
 
         <div class="section-head">
@@ -666,6 +721,12 @@
          RELEASE TIMELINE
     ══════════════════════════════════════════════════════════ -->
     <section class="roadmap-section">
+      <div class="bg-icons" aria-hidden="true">
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:4%; left:2%; width:60px; height:60px; transform:rotate(-16deg); --bg-icon-opacity:0.12;"><use href="#i-atom" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:8%; right:3%; width:70px; height:70px; transform:rotate(10deg); --bg-icon-color:var(--accent-orange-light); --bg-icon-opacity:0.11;"><use href="#i-scroll" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:6%; left:5%; width:52px; height:52px; transform:rotate(24deg); --bg-icon-color:var(--accent-blue-light); --bg-icon-opacity:0.12;"><use href="#i-pencil" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:4%; right:6%; width:64px; height:64px; transform:rotate(-9deg); --bg-icon-opacity:0.12;"><use href="#i-apple" /></svg>
+      </div>
       <div class="container">
 
         <div class="section-head">
@@ -717,6 +778,10 @@
          CLOSING FACTS
     ══════════════════════════════════════════════════════════ -->
     <section class="facts-section">
+      <div class="bg-icons" aria-hidden="true">
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:10%; left:3%; width:56px; height:56px; transform:rotate(15deg); --bg-icon-opacity:0.12;"><use href="#i-ruler" /></svg>
+        <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="bottom:8%; right:4%; width:50px; height:50px; transform:rotate(-18deg); --bg-icon-color:var(--accent-blue-light); --bg-icon-opacity:0.12;"><use href="#i-atom" /></svg>
+      </div>
       <div class="container">
         <div class="meta-strip" aria-hidden="true">
           <div class="stat"><strong>4</strong>Published versions</div>
@@ -729,6 +794,9 @@
   </main>
 
   <footer class="site-footer">
+    <div class="bg-icons" aria-hidden="true">
+      <svg class="icon bg-icon" aria-hidden="true" focusable="false" style="top:20%; right:5%; width:44px; height:44px; transform:rotate(-10deg); --bg-icon-opacity:0.10;"><use href="#i-scroll" /></svg>
+    </div>
     <div class="container">
       <p>
         Put this file at <code>docs/index.html</code>. Each version folder should also contain its own <code>index.html</code> so GitHub Pages can open the folder directly.

@@ -11,6 +11,22 @@ pushed: yes; remote tag verified: yes). Snapshot created and verified at
 
 ## Last Updated
 
+2026-09-11 (third session) — **`docs/index.html` whole-page educational icon background.** Added a
+decorative background field of hand-authored inline SVG icons (education motifs: graduation cap,
+flask, sigma, book, pencil, apple, diploma/scroll, atom, ruler — 9 icons, ~19 instances) across every
+section (hero, published-versions, timeline, closing facts, footer), addressing feedback that the
+background was still plain after the re-architecture below. Objects/symbols only, no human figures.
+Icons are static (no new animation — a deliberate scope-limiting choice; see `DECISION_LOG.md`),
+stroke-only, low opacity (0.10–0.18) on existing color tokens only, sized 44–104px, individually
+positioned and rotated by hand to avoid a "grid" or "clip-art" look. They paint behind all foreground
+content (the `.container` rule gained `position:relative;z-index:1`, reusing the exact stacking
+recipe `.hero__inner` already used) — cards visually occlude any icon that sits beneath them, no
+placement-avoidance logic was needed. **Zero content change: all 49 user-visible strings verified
+unchanged.** No JavaScript, no external references. Verified in a real browser at 1600/1100/900/760px
+and via a same-origin iframe harness at 400/360px (headless browser windows clamp below ~400px) —
+zero horizontal overflow at any width (`document.documentElement.scrollWidth` measured equal to
+viewport width, zero offending elements), confirmed via DOM measurement, not just visual inspection.
+
 2026-09-11 (later session) — **`docs/index.html` visual re-architecture.** Full-bleed centered
 hero replacing the two-column hero and its absolutely-positioned decorative stage; the latest
 release promoted to a full-width row above a 3-up row of archived releases; the 3-stat strip
@@ -38,6 +54,22 @@ URL (`https://rmz9dkfy5f-pixel.github.io/Summit-Learning-Center/`, `HTTP 200`).
 
 ## Working
 
+- **Verification performed for the whole-page icon background (third 2026-09-11 session).**
+  Real-browser screenshots (headless Edge) at 1600/1100/900/760px: icons read clearly as intentional
+  imagery without ever reducing text/card legibility, and cards correctly occlude any icon beneath
+  them. Below ~400px headless windows clamp, so 360px/400px were verified via a same-origin `<iframe>`
+  harness with a script measuring `document.documentElement.scrollWidth` against viewport width
+  directly (not just visual inspection) — result: exactly equal at both widths, zero elements
+  extending past the viewport edge. String parity re-confirmed at 49/49 (no visible text added — all
+  new elements are `aria-hidden`). HTML tag balance clean (including the new `<ellipse>`/`<circle>`
+  self-closing elements). Zero `<script>` tags, zero external references. `python3 -m http.server` +
+  `curl`: root and all 4 version links still return `HTTP 200`.
+  - One false alarm during verification, resolved: a screenshot at 760px showed what looked like a
+    thin vertical line near the right edge, suggestive of overflow. Direct DOM measurement
+    (`scrollWidth` vs `innerWidth`, zero offending elements) proved the tree was not actually
+    overflowing — the line was a harmless rendering artifact (a card border/shadow edge), not a
+    layout bug. Recorded here so a future session doesn't have to re-diagnose the same screenshot
+    artifact from scratch.
 - **Verification performed for the `docs/index.html` re-architecture (later 2026-09-11 session),
   including the real-browser check that was previously outstanding.** Headless Microsoft Edge
   (`--headless=new`) screenshots inspected at 1600 / 1100 / 900 / 760 / 520 / 400 / 360 px: no
