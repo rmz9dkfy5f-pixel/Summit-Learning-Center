@@ -49,6 +49,7 @@ URL (`https://rmz9dkfy5f-pixel.github.io/Summit-Learning-Center/`, `HTTP 200`).
 
 ## Next Actions
 
+- **User-confirmed next task (2026-09-11 session-end closeout):** visually confirm
+  `docs/index.html`'s new decorative elements render as intended in a real browser at desktop and
+  mobile widths.
 - Decide and record the release-readiness facts above, or explicitly accept deferring them.
-- Visually confirm `docs/index.html`'s new decorative elements render as intended in a real
-  browser at desktop and mobile widths.
