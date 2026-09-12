@@ -25,6 +25,21 @@ session created `v0.3.2`).
 
 ## Last Updated
 
+2026-09-12 — **Firefox/WebKit rendering check.** Ran the user-confirmed cross-browser visual check
+of `docs/index.html` at HEAD (unchanged since `v0.3.2`): Playwright-driven headless **real Firefox
+155.0** and **WebKit** (Chromium/Edge already verified previously) at the same 7 widths as the
+earlier Edge pass (1600/1100/900/760/520/400/360px), each captured with `prefers-reduced-motion:
+reduce` and with the default (animated) preference. Result: zero horizontal overflow at any width
+in either engine (`document.documentElement.scrollWidth` measured equal to viewport width, no
+elements extending past the viewport edge), and visually identical layout/reflow behavior to the
+already-verified Chromium/Edge pass — full-bleed hero, 3-up archived-release grid reflowing
+3→2+1→1, vertical release timeline below 760px, conic-gradient ring, and the icon background field
+all render correctly in both engines. **Important caveat:** the "Safari" result is Playwright's
+WebKit engine, not genuine Apple Safari — it does not cover Safari-specific rendering quirks, font
+metrics, or Apple's own WebKit version; a real Safari check on Apple hardware remains open (see
+`docs/governance/COMPATIBILITY_MATRIX.md`). No code changes were needed — `docs/index.html` was not
+modified.
+
 2026-09-11 (third session) — **`docs/index.html` whole-page educational icon background.** Added a
 decorative background field of hand-authored inline SVG icons (education motifs: graduation cap,
 flask, sigma, book, pencil, apple, diploma/scroll, atom, ruler — 9 icons, ~19 instances) across every
@@ -128,15 +143,19 @@ URL (`https://rmz9dkfy5f-pixel.github.io/Summit-Learning-Center/`, `HTTP 200`).
   the floating pills) no longer exist: they were the fragile absolutely-positioned geometry and were
   replaced with flow-based layout. The conic ring survives, re-sited into normal flow, and renders
   correctly at every width checked.
-- Not verified: rendering in Firefox or Safari. All checks were run in Chromium (Edge). The page
-  uses only broadly-supported CSS — `color-mix()`, `aspect-ratio`, `conic-gradient`, and a
-  `@supports`-guarded `background-clip: text` — but this has not been observed first-hand.
+- ~~Not verified: rendering in Firefox or Safari.~~ **Closed for Firefox (2026-09-12)** — verified
+  in real headless Firefox 155.0 via Playwright, zero overflow, layout matches Chromium. **Partially
+  closed for Safari** — verified via Playwright's WebKit engine (same result), but this is **not**
+  genuine Apple Safari; a real Safari check on Apple hardware remains open. The page's CSS
+  (`color-mix()`, `aspect-ratio`, `conic-gradient`, `@supports`-guarded `background-clip: text`)
+  rendered correctly in both Firefox and WebKit.
 
 ## Next Actions
 
-- **User-confirmed next task (2026-09-11 session-end closeout):** cross-browser visual check of the
-  redesigned `docs/index.html` (re-architecture + icon background) in Firefox and Safari — only
-  Chromium has been observed so far.
+- ~~**User-confirmed next task (2026-09-11 session-end closeout):** cross-browser visual check of
+  the redesigned `docs/index.html` in Firefox and Safari.~~ **Closed 2026-09-12** for
+  Firefox (real) and Safari (WebKit-engine proxy only — see caveat above). Real Apple Safari
+  verification remains open if the user wants it, on actual Mac hardware.
 - Decide and record the release-readiness facts above, or explicitly accept deferring them.
 - Consider adding subtle motion to the background icon field if it still feels too static once
   lived with — a deliberate scope choice this session, not an oversight (see `DECISION_LOG.md`).

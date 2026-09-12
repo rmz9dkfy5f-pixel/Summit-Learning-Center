@@ -1,5 +1,32 @@
 # Commit Notes
 
+## 2026-09-12 — Firefox/WebKit cross-browser visual check (documentation only, no site-code change)
+
+## Summary
+
+- Verified `docs/index.html` (unchanged since `v0.3.2`) renders correctly in real headless Firefox
+  155.0 and in Playwright's WebKit engine (an explicitly-labeled Safari proxy, not genuine Apple
+  Safari), at the same 7 widths as the earlier Edge check. Zero overflow, layout matches the
+  already-verified Chromium/Edge pass. Updated `docs/governance/COMPATIBILITY_MATRIX.md` and this
+  file's sibling `docs/project/STATUS.md` with the results.
+
+## Description
+
+- What changed: no change to `docs/index.html` or any site content — this was a verification-only
+  pass. Only `docs/governance/COMPATIBILITY_MATRIX.md` and `docs/project/STATUS.md` were updated
+  with the confirmed browser-coverage results.
+- Why: user-confirmed next task from the prior session's closeout — the Firefox/Safari visual
+  check that had been left open.
+- Validation: Playwright-driven headless Firefox and WebKit, 7 widths
+  (1600/1100/900/760/520/400/360px), both `prefers-reduced-motion: reduce` and default —
+  `document.documentElement.scrollWidth` measured against viewport width at every combination (28
+  captures total), zero overflow. Screenshots at representative widths (1600, 760, 360) reviewed
+  for both engines — layout, reflow, and CSS-feature rendering (`conic-gradient`, `color-mix()`,
+  `aspect-ratio`, `@supports`-guarded `background-clip: text`) all matched the already-verified
+  Chromium/Edge pass.
+- Risks / follow-up: the Safari result is a WebKit-engine proxy, not genuine Apple Safari — real
+  Safari verification remains open and needs actual Mac hardware.
+
 ## 2026-09-11 (third session) — `docs/index.html` re-architecture + background icon field (will be tagged `v0.3.2`, applied in this session's closeout)
 
 ## Summary
